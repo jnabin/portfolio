@@ -1,0 +1,51 @@
+---
+title: "One CRM, Five Surfaces: a Political Campaign Platform"
+summary: "A Canadian political-campaign CRM — canvassing, predictive dialing, donations, surveys, and analytics — delivered across web, mobile, a Chrome extension, a Gmail add-on, and a member portal."
+role: "Full-stack developer — second-highest contributor (821 commits); guided 2 intern developers"
+period: "2020 – 2022, Democratik (Canada, remote)"
+stack: ["Angular", "Node.js", "AWS Cognito", "Stripe", "Leaflet", "Plivo", "Pusher", "Cordova", "i18n EN/FR"]
+metrics:
+  - { label: "Commits on the main client", value: "821" }
+  - { label: "Delivery surfaces", value: "5" }
+  - { label: "Client codebase", value: "1,100+ files" }
+featured: true
+order: 5
+---
+
+## Context
+
+Democratik is the operating system for political campaigns in Quebec and wider Canada: door-to-door canvassing, predictive and auto-dialing with call logging, SMS and email campaigns, donations, surveys, volunteer coordination, and analytics. Campaign software has an unforgiving audience — volunteers with no training, candidates with no patience, and election deadlines that do not move.
+
+<Callout title="My role">
+  Second-highest contributor on the main Angular client (821 commits across a 1,100+ file codebase), working remotely with the Canadian team. Beyond the web CRM, I helped deliver the same product to four more surfaces — mobile, a Chrome extension, a Gmail add-on, and a self-service member portal — and guided 2 intern developers through code reviews and implementation.
+</Callout>
+
+## Architecture
+
+<ArchDiagram
+  layers={[
+    { label: "Surfaces", items: ["Web CRM (Angular)", "Mobile (Cordova)", "Chrome extension", "Gmail add-on", "Member portal"] },
+    { label: "Services", items: ["Node.js API", "AWS Cognito auth", "Stripe donations", "Pusher realtime", "Plivo browser VoIP"] },
+    { label: "Field tools", items: ["Journey builder", "Canvassing composer", "Leaflet territories", "Email & form builders"] },
+  ]}
+/>
+
+## Key decisions
+
+**Campaign automation as a visual canvas.** The journey builder let campaign staff drag and connect automation steps — triggers, waits, messages, tags — instead of filing requests to developers. Non-technical staff shipping their own automations was the feature that made the product sticky.
+
+**Canvassing built as composition.** The door-to-door composer assembled surveys, questions, tags, phone actions, and donation asks into scripted field workflows a volunteer could follow on a phone at a stranger's doorstep.
+
+**Territory management on real geospatial data.** Leaflet dot maps, heat maps, and hand-drawn polygons over a ten-thousand-point address dataset, with rule-driven coloring — turning voter files into something an organizer can actually reason about.
+
+**A call center in the browser.** Plivo-powered VoIP with multi-party predictive dialing, do-not-call list management, and call-status tracking — no desk phones, no installed softphone, just the CRM tab.
+
+**Bilingual as a first-class constraint.** Full EN/FR support with automated translation extraction — in Quebec politics, French is not a localization afterthought.
+
+## Results
+
+One product delivered across five surfaces: the web CRM, a Cordova mobile app with in-app calling, a Chrome extension surfacing contacts and tasks in the toolbar, a Gmail add-on matching open emails to CRM records, and a member portal handling memberships, renewals, and recurring donations through Stripe. Real-time chat and notifications ran over Pusher; configurable form and email builders, Avery label printing, and gamified goal dashboards rounded out the field toolkit.
+
+## What I'd do differently
+
+Establish a shared state-management architecture across surfaces earlier. Each surface solved caching and session state its own way; a common pattern from the start would have cut the duplication we later had to live with.

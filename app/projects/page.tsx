@@ -15,7 +15,15 @@ const moreWork = [
   { title: "IBM z/OS mainframe port", note: "COBOL/CICS/DB2 airline system ported to IBM Cloud Wazi; demonstrated at a conference in Japan." },
   { title: "z/OS BPXBATCH consulting", note: "Root-caused a failing JCL cloud integration to EBCDIC encoding; delivered production JCL and a runbook." },
   { title: "AI-powered Google Ads platform", note: "Campaign management with ChatGPT-assisted suggestions, Angular Material UI, i18n, white-label." },
-  { title: "Democratik campaign CRM", note: "Angular/Node.js platform: form builders, Leaflet maps, Pusher chat, Chrome extension, Gmail add-on." },
+  { title: "Yodlee financial-data integration", note: "Clean Architecture/CQRS .NET service integrating Yodlee aggregation APIs with token-based auth and normalized PostgreSQL persistence." },
+  { title: "Full-stack realtime chat platform", note: "Self-authored end to end: Angular + Material front end, Node/Express + MySQL API, Pusher realtime — DMs, groups, threads, reactions, file uploads." },
+  { title: "AI voice calling for a real-estate CRM", note: "Angular embed for Follow Up Boss placing outbound Retell AI voice-agent calls with dynamic LLM variables, writing outcomes back to the CRM." },
+  { title: "LLM-powered website extraction API", note: ".NET 9 Web API pairing AngleSharp parsing with the OpenAI API to return structured business data from any URL." },
+  { title: "Workplace-safety signage SaaS", note: "Maintained and extended an ISO 7010 safety-poster platform — Angular Universal SSR, NgRx, drag-and-drop poster editor, Stripe subscriptions." },
+  { title: "Esports wagering platform", note: "Full-stack development on a 1v1/5v5 matchmaking product — Node/Express + MongoDB, Socket.IO realtime, token economy, twin Angular player/admin apps." },
+  { title: "Member portal & campaign websites", note: "Angular self-service portal (memberships, renewals, recurring donations, event tickets) plus bilingual campaign sites for Canadian politicians." },
+  { title: "Appointment scheduler", note: "Angular + Material calendar booking app with lazy-loaded feature modules and reactive forms, deployed on Firebase Hosting." },
+  { title: "Review-request micro-SaaS", note: "ASP.NET Core MVC tool giving businesses branded landing pages that funnel customers to Google and Facebook reviews." },
   { title: "FarmNet (internship)", note: "Agro-fintech platform connecting farmers, consumers, and investors — ASP.NET Core MVC." },
 ];
 

@@ -14,6 +14,7 @@ const pages = [
   { file: "tpsaas-compliance-platform", title: "Multi-Tenant SaaS Case Study", subtitle: "413 endpoints · CQRS · EF Core tenant isolation · Stripe" },
   { file: "freightoscope-platform", title: "Freight ERP Case Study", subtitle: "4.5 years · 25+ integrations · 3,600+ commits" },
   { file: "bizxtract-licensing", title: "Fail-Closed Licensing Case Study", subtitle: "Ed25519 entitlements · offline grace · idempotent webhooks" },
+  { file: "democratik-campaign-crm", title: "Campaign CRM Case Study", subtitle: "One product, five surfaces · 821 commits · canvassing, dialing, donations" },
 ];
 
 const font = await fetch("https://unpkg.com/@fontsource/inter@5.0.16/files/inter-latin-700-normal.woff").then((r) => {

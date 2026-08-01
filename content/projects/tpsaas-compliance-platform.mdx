@@ -43,7 +43,7 @@ TPSaaS helps companies manage vendor security risk: supplier onboarding, securit
 
 ## Results
 
-The platform runs on AWS ECS Fargate with RDS PostgreSQL, S3, Secrets Manager, and ElastiCache across development, UAT, and production environments; 13 Hangfire recurring jobs handle assessment reminders, syncs, and digests. In-app SignalR notifications pair with SES email delivery including bounce tracking.
+The platform runs on AWS ECS Fargate with RDS PostgreSQL, S3, Secrets Manager, and ElastiCache across development, UAT, and production environments; 13 Hangfire recurring jobs handle assessment reminders, syncs, and digests. In-app SignalR notifications pair with SES email delivery including bounce tracking. I also wrote the pandas + psycopg2 ETL that seeded the question bank — tiered fuzzy matching that maps business-owner questions to conditional vendor follow-ups from questionnaire spreadsheets.
 
 ## What I'd do differently
 
