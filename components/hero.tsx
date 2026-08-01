@@ -26,7 +26,7 @@ export function Hero() {
             </a>
           </div>
         </div>
-        <div className="flex flex-col items-center gap-3">
+        <div className="flex flex-col items-center gap-3 self-center md:self-auto">
           <Image
             src="/headshot.jpg"
             alt="Portrait of Jahangir Alam Nabin"
