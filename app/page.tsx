@@ -1,10 +1,26 @@
+import { Hero } from "@/components/hero";
+import { ProjectCard } from "@/components/project-card";
+import { EvidencePanel } from "@/components/evidence-panel";
+import { Section } from "@/components/section";
+import { getAllProjects } from "@/lib/projects";
+
 export const dynamic = "error";
 
 export default function Home() {
+  const featured = getAllProjects().filter((p) => p.featured);
   return (
-    <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-      <h1 className="text-3xl font-extrabold text-brand">Design system shell</h1>
-      <p className="mt-2 text-fg-muted">Tokens, fonts, nav, footer, and theme toggle live.</p>
-    </div>
+    <>
+      <Hero />
+      <Section id="projects" title="Case studies">
+        <div className="grid gap-4 sm:grid-cols-2">
+          {featured.map((p) => (
+            <ProjectCard key={p.slug} project={p} />
+          ))}
+        </div>
+      </Section>
+      <Section id="evidence" title="Evidence">
+        <EvidencePanel />
+      </Section>
+    </>
   );
 }
