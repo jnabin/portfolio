@@ -7,6 +7,8 @@ export const dynamic = "error";
 export const metadata: Metadata = {
   title: "Projects",
   description: "Case studies: production RAG, multi-tenant SaaS, a freight ERP evolved over 4.5 years, and a licensed desktop product.",
+  alternates: { canonical: "/projects" },
+  openGraph: { images: ["/og/projects.png"] },
 };
 
 const moreWork = [
