@@ -8,7 +8,7 @@ export function JsonLd() {
     jobTitle: "Senior Software Engineer",
     url: SITE_URL,
     email: `mailto:${site.contact.email}`,
-    sameAs: [site.contact.linkedin, site.contact.github, site.contact.upwork],
+    sameAs: [site.contact.linkedin, site.contact.upwork],
   };
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
 }

@@ -18,7 +18,6 @@ export const site = {
   contact: {
     email: "jahangirnabin2@gmail.com",
     linkedin: "https://www.linkedin.com/in/jahangir-nabin",
-    github: "https://github.com/jnabin",
     upwork: "https://www.upwork.com/freelancers/~014a55b53d36d618d6",
   },
   evidence: [

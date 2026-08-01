@@ -18,7 +18,6 @@ describe("site content integrity", () => {
     expect(site.skills).toHaveLength(6);
     expect(site.contact.email).toContain("@");
     expect(site.contact.linkedin).toContain("linkedin.com");
-    expect(site.contact.github).toContain("github.com");
     expect(site.contact.upwork).toContain("upwork.com");
   });
 
