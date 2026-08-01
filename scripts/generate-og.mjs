@@ -1,12 +1,16 @@
 // Generates static OG images (1200x630) into public/og/. Run: node scripts/generate-og.mjs
-import { writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import satori from "satori";
 import { Resvg } from "@resvg/resvg-js";
+
+const siteTs = readFileSync("content/site.ts", "utf-8");
+const SITE_URL = siteTs.match(/SITE_URL\s*=\s*"([^"]+)"/)[1];
+const SITE_HOST = new URL(SITE_URL).host;
 
 const pages = [
   { file: "home", title: "Jahangir Nabin", subtitle: "Senior Software Engineer — .NET, Distributed Systems & Applied AI" },
   { file: "projects", title: "Projects & Case Studies", subtitle: "Production RAG · Multi-tenant SaaS · Freight ERP · Licensed desktop product" },
-  { file: "automotive-rag-chatbot", title: "RAG Chatbot Case Study", subtitle: "Hybrid retrieval · recall@100 96.9% → 100% · SLO release gates" },
+  { file: "automotive-rag-chatbot", title: "RAG Chatbot Case Study", subtitle: "Hybrid retrieval · recall@100 raised to 100% · SLO release gates" },
   { file: "tpsaas-compliance-platform", title: "Multi-Tenant SaaS Case Study", subtitle: "413 endpoints · CQRS · EF Core tenant isolation · Stripe" },
   { file: "freightoscope-platform", title: "Freight ERP Case Study", subtitle: "4.5 years · 25+ integrations · 3,600+ commits" },
   { file: "bizxtract-licensing", title: "Fail-Closed Licensing Case Study", subtitle: "Ed25519 entitlements · offline grace · idempotent webhooks" },
@@ -38,7 +42,7 @@ for (const page of pages) {
         children: [
           { type: "div", props: { style: { fontSize: 64, fontWeight: 700 }, children: page.title } },
           { type: "div", props: { style: { fontSize: 30, marginTop: 24, color: "#7fb1e0" }, children: page.subtitle } },
-          { type: "div", props: { style: { fontSize: 24, marginTop: 48, color: "#7ee0a3" }, children: "portfolio-jnabin.vercel.app" } },
+          { type: "div", props: { style: { fontSize: 24, marginTop: 48, color: "#7ee0a3" }, children: SITE_HOST } },
         ],
       },
     },

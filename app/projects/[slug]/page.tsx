@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { compileMDX } from "next-mdx-remote/rsc";
-import { mdxComponents } from "@/components/mdx";
-import { MetricCard } from "@/components/mdx/metric-card";
-import { StackChips } from "@/components/mdx/stack-chips";
+import { mdxComponents, MetricCard, StackChips } from "@/components/mdx";
 import { getAllProjects, getProjectBySlug } from "@/lib/projects";
 
 export const dynamic = "error";

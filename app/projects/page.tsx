@@ -27,7 +27,8 @@ export default function ProjectsPage() {
       <p className="mt-2 max-w-2xl text-fg-muted">
         Four deep dives with architecture and measured results, plus smaller work worth a mention.
       </p>
-      <div className="mt-8 grid gap-4 sm:grid-cols-2">
+      <h2 className="mt-10 mb-4 text-xl font-extrabold text-fg">Case studies</h2>
+      <div className="grid gap-4 sm:grid-cols-2">
         {projects.map((p) => (
           <ProjectCard key={p.slug} project={p} />
         ))}

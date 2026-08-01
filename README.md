@@ -4,12 +4,16 @@ Static portfolio site: Next.js (App Router) + Tailwind CSS, fully prerendered.
 
 ## Develop
 
+```bash
 npm install
 npm run dev
+```
 
 ## Verify
 
+```bash
 npm run lint && npx tsc --noEmit && npm test && npm run build
+```
 
 ## Content
 
@@ -21,4 +25,4 @@ npm run lint && npx tsc --noEmit && npm test && npm run build
 ## Deploy
 
 Push to GitHub and import the repo at vercel.com/new — zero configuration.
-After the first deploy, set the final URL in `content/site.ts` (`SITE_URL`) and redeploy.
+After the first deploy, set the final URL in `content/site.ts` (`SITE_URL`) and redeploy. If the assigned URL differs, update `SITE_URL`, run `node scripts/generate-og.mjs`, and commit the regenerated images.
