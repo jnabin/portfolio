@@ -29,7 +29,13 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
   const project = getProjectBySlug(slug);
   if (!project) notFound();
 
-  const { content } = await compileMDX({ source: project.content, components: mdxComponents });
+  // Case-study MDX is self-authored (content/projects/), so JS expressions in
+  // component props are trusted; blockDangerousJS still blocks eval/process/etc.
+  const { content } = await compileMDX({
+    source: project.content,
+    components: mdxComponents,
+    options: { blockJS: false, blockDangerousJS: true },
+  });
   const { meta } = project;
 
   return (
