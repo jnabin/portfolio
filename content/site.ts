@@ -1,5 +1,13 @@
 export const SITE_URL = "https://portfolio-jnabin.vercel.app";
 
+type ExperienceItem = {
+  title: string;
+  company: string;
+  dates: string;
+  note?: string;
+  lines: string[];
+};
+
 export const site = {
   name: "Jahangir Alam Nabin",
   headline: "Senior Software Engineer — .NET, Distributed Systems & Applied AI",
@@ -77,7 +85,7 @@ export const site = {
         "Database design and responsive UI from Figma designs.",
       ],
     },
-  ],
+  ] as ExperienceItem[],
   skills: [
     { category: "Languages", items: ["C#", "Python", "TypeScript", "JavaScript", "SQL", "Dart"] },
     { category: "Backend & Frontend", items: [".NET 8/9/10", "ASP.NET Core", "FastAPI", "Node.js", "Angular", "React/Next.js", "Flutter", "SignalR", "REST APIs", "RxJS"] },
