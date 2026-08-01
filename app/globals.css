@@ -1,26 +1,59 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #ffffff;
+  --bg-subtle: #f3f6fa;
+  --fg: #111827;
+  --fg-muted: #4b5563;
+  --brand: #1f4e79;
+  --brand-fg: #ffffff;
+  --border: #e2e8f0;
+  --panel: #0f2740;
+  --panel-fg: #dbe7f4;
+  --panel-accent: #7ee0a3;
+}
+
+.dark {
+  --bg: #0b1220;
+  --bg-subtle: #111a2c;
+  --fg: #e5edf7;
+  --fg-muted: #9fb0c7;
+  --brand: #7fb1e0;
+  --brand-fg: #0b1220;
+  --border: #22304a;
+  --panel: #0f2740;
+  --panel-fg: #dbe7f4;
+  --panel-accent: #7ee0a3;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-brand: var(--brand);
+  --color-brand-fg: var(--brand-fg);
+  --color-border: var(--border);
+  --color-panel: var(--panel);
+  --color-panel-fg: var(--panel-fg);
+  --color-panel-accent: var(--panel-accent);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jbmono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
 }
