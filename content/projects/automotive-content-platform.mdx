@@ -1,0 +1,52 @@
+---
+title: "Event-Driven Content Platform for a Global Automotive Client"
+summary: "The platform behind the chatbot — a .NET 9 modular monolith of 11 services with transactional-outbox messaging into Kafka, an admin panel, and a mobile BFF, delivered under my team leadership."
+role: "Team lead and primary engineer — content platform, admin panel (backend and frontend), and sole author of the mobile BFF"
+period: "2025 – 2026, Brain Station 23"
+stack: [".NET 9", "PostgreSQL 17", "Kafka", "MassTransit", "Keycloak", "React/Next.js", "Redis", "Quartz", "Testcontainers"]
+metrics:
+  - { label: "Bounded services", value: "11" }
+  - { label: "Automated tests", value: "585" }
+  - { label: "Delivery surfaces", value: "4" }
+featured: true
+order: 2
+---
+
+## Context
+
+A global automotive client needed one platform to manage vehicle content — manuals, guides, notifications — and deliver it consistently to every surface a driver touches: an administration panel for content teams, a mobile app, and the AI chatbot that answers questions from that content. This case study covers the platform side; the retrieval system has [its own case study](/projects/automotive-rag-chatbot).
+
+<Callout title="My role">
+  I lead the delivery team. I'm the primary engineer on the admin panel backend and frontend, sole author of the .NET 9 mobile BFF, and responsible for the messaging backbone that keeps every surface consistent with the content source of truth.
+</Callout>
+
+## Architecture
+
+<ArchDiagram
+  layers={[
+    { label: "Surfaces", items: ["Admin panel (Next.js/React)", "Mobile BFF (.NET 9)", "Companion mobile app", "AI chatbot (consumer)"] },
+    { label: "Platform", items: ["Modular monolith — 11 services", "Keycloak OIDC", "REST APIs"] },
+    { label: "Messaging", items: ["Transactional outbox", "LISTEN/NOTIFY push", "Quartz sweep fallback", "MassTransit → Kafka"] },
+    { label: "Data & Quality", items: ["PostgreSQL 17", "Redis", "Testcontainers", "Architecture tests", "SonarQube CI"] },
+  ]}
+/>
+
+## Key decisions
+
+**Modular monolith over microservices.** Eleven bounded services in one deployable: service boundaries are real — enforced by automated architecture tests that fail the build on illegal imports — but there's no distributed-system tax on a team of this size. The seams exist for the day extraction is worth it.
+
+**Messages that cannot be lost.** Content changes publish through a transactional outbox: the event commits in the same PostgreSQL transaction as the data, then PostgreSQL LISTEN/NOTIFY pushes it to the dispatcher with a Quartz sweep as the fallback for anything missed. MassTransit carries it into Kafka. A crashed process or a dropped connection delays a message; it never silently loses one.
+
+**One identity provider for every surface.** Keycloak OIDC fronts the admin panel, the BFF, and service-to-service calls — no per-app auth reinvention, and operator access is centrally revocable.
+
+**A BFF, not a general API, for mobile.** The mobile app talks to a dedicated .NET 9 backend-for-frontend that aggregates and shapes platform data per screen — mobile releases stop being hostage to platform API changes.
+
+**Quality gates that bite.** 585 automated tests including Testcontainers-backed integration suites and the architecture-boundary checks, with SonarQube on CI — plus a live contract test proving the content platform's output matches what the chatbot's ingestion expects.
+
+## Results
+
+The platform feeds four surfaces from one source of truth, with content changes propagating through the outbox-to-Kafka pipeline and every service behind a single identity provider. The admin panel ships content-team workflows end to end, and the companion mobile app is delivered through the BFF under my team leadership.
+
+## What I'd do differently
+
+Build outbox observability sooner — dispatch lag, dead-letter visibility, and replay tooling. The pattern guarantees delivery, but operating it confidently requires seeing it, and we added that instrumentation later than we should have.

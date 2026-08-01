@@ -87,8 +87,8 @@ export const site = {
     },
   ] as ExperienceItem[],
   skills: [
-    { category: "Languages", items: ["C#", "Python", "TypeScript", "JavaScript", "SQL", "Dart"] },
-    { category: "Backend & Frontend", items: [".NET 8/9/10", "ASP.NET Core", "FastAPI", "Node.js", "Angular", "React/Next.js", "Flutter", "SignalR", "Socket.IO", "REST APIs", "RxJS", "NgRx"] },
+    { category: "Languages", items: ["C#", "Python", "TypeScript", "JavaScript", "SQL"] },
+    { category: "Backend & Frontend", items: [".NET 8/9/10", "ASP.NET Core", "FastAPI", "Node.js", "Angular", "React/Next.js", "SignalR", "Socket.IO", "REST APIs", "RxJS", "NgRx"] },
     { category: "AI & LLM Engineering", items: ["RAG", "LLM integration", "Generative AI", "Prompt engineering", "LangChain", "Semantic Kernel", "Cohere reranking", "Qdrant", "pgvector", "Hybrid search (BM25, RRF)"] },
     { category: "Architecture & Messaging", items: ["Clean Architecture", "CQRS (MediatR)", "Modular monoliths", "Microservices", "Domain-Driven Design", "Kafka", "MassTransit", "Transactional outbox", "SOLID"] },
     { category: "Data & Cloud", items: ["PostgreSQL", "SQL Server", "MongoDB", "Redis", "EF Core", "Dapper", "AWS (EC2, S3, ECS Fargate, RDS)", "Azure (Functions, Blob, DevOps)", "Docker", "GitHub Actions", "IBM Cloud"] },

@@ -11,6 +11,7 @@ const pages = [
   { file: "home", title: "Jahangir Nabin", subtitle: "Senior Software Engineer — .NET, Distributed Systems & Applied AI" },
   { file: "projects", title: "Projects & Case Studies", subtitle: "Production RAG · Multi-tenant SaaS · Freight ERP · Licensed desktop product" },
   { file: "automotive-rag-chatbot", title: "RAG Chatbot Case Study", subtitle: "Hybrid retrieval · recall@100 raised to 100% · SLO release gates" },
+  { file: "automotive-content-platform", title: "Automotive Platform Case Study", subtitle: "Modular monolith · transactional outbox · Kafka · 585 tests" },
   { file: "tpsaas-compliance-platform", title: "Multi-Tenant SaaS Case Study", subtitle: "413 endpoints · CQRS · EF Core tenant isolation · Stripe" },
   { file: "freightoscope-platform", title: "Freight ERP Case Study", subtitle: "4.5 years · 25+ integrations · 3,600+ commits" },
   { file: "bizxtract-licensing", title: "Fail-Closed Licensing Case Study", subtitle: "Ed25519 entitlements · offline grace · idempotent webhooks" },
