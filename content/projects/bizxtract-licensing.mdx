@@ -1,0 +1,47 @@
+---
+title: "A Desktop Product with Fail-Closed Licensing"
+summary: "BizXtract — a sole-authored cross-platform desktop app and its licensing platform: Ed25519-signed device-bound entitlements, offline grace, idempotent billing webhooks, and crash-safe local storage."
+role: "Sole engineer: desktop client, license server, payments, CI/CD, release pipeline"
+period: "2026, independent product"
+stack: [".NET 10", "Avalonia", "Node.js", "MongoDB", "Stripe", "Paddle", "Ed25519", "SQLite", "Velopack"]
+metrics:
+  - { label: "Entitlement TTL", value: "12-hour signed packages" }
+  - { label: "Offline grace", value: "3 days, fail-closed after" }
+  - { label: "Platforms", value: "Windows + macOS" }
+featured: true
+order: 4
+---
+
+## Context
+
+BizXtract is a lead-generation desktop product I author and ship solo — a .NET 10 + Avalonia rewrite of an older WinForms tool, sold under subscription. Selling software to strangers changes your engineering priorities: licensing, updates, and crash recovery stop being infrastructure and become the product.
+
+<Callout title="Why this project matters">
+  It demonstrates the unglamorous engineering that keeps a paid product trustworthy: cryptographic entitlements, billing edge cases, and update rollbacks — all designed and operated by one person.
+</Callout>
+
+## Architecture
+
+<ArchDiagram
+  layers={[
+    { label: "Desktop", items: ["Avalonia UI (Win/macOS)", "SQLite (WAL) local store", "Velopack auto-update"] },
+    { label: "Licensing", items: ["Device-bound entitlements", "Ed25519 signatures", "12-hour TTL", "Fail-closed verification"] },
+    { label: "Server", items: ["Node.js license server", "MongoDB", "Stripe → Paddle billing", "Idempotent webhooks"] },
+  ]}
+/>
+
+## Key decisions
+
+**Fail closed, but humanely.** The client verifies an Ed25519-signed entitlement before running and refuses anything unsigned or expired. Entitlements bind to an installation-scoped device ID and re-verify server-side on every call. Because customers work offline, a 3-day grace window keeps them productive past the last sync — with revoked and expired kept as distinct states so support can tell an ex-customer from an airplane passenger.
+
+**Billing webhooks are exactly-once by design.** The Stripe-to-Paddle migration forced idempotent webhook processing: every event handler is safe to replay, so a duplicated or out-of-order delivery cannot double-activate or wrongly revoke a license.
+
+**Updates must be reversible.** Velopack ships delta updates from a CDN with one-line rollback. Combined with SQLite in WAL mode and crash-recovery tests in CI, a bad release or a mid-write power loss degrades to an inconvenience instead of data loss.
+
+## Results
+
+A single codebase ships to Windows and macOS with signed releases, auto-updates, subscription validation, and smoke tests in CI. The licensing platform has survived a live payment-provider migration without locking out a single paying user.
+
+## What I'd do differently
+
+Design the entitlement schema for multiple products from the start. The server assumes one product in several places, and generalizing it now costs more than it would have on day one.

@@ -1,0 +1,50 @@
+---
+title: "Multi-Tenant Compliance SaaS at 400-Endpoint Scale"
+summary: "A vendor-risk and compliance platform — tenant isolation with EF Core global query filters, CQRS across 54 feature modules, multi-IdP SSO, and Stripe subscription billing."
+role: "Architect and top contributor (~45% of 3,240 commits); lead a 6-developer team"
+period: "2025 – 2026, Brain Station 23"
+stack: [".NET 8", "Next.js 15", "React 19", "PostgreSQL", "EF Core", "CQRS/MediatR", "Stripe", "SignalR", "AWS ECS Fargate"]
+metrics:
+  - { label: "REST endpoints", value: "413" }
+  - { label: "Command/query handlers", value: "342" }
+  - { label: "Feature modules", value: "54" }
+featured: true
+order: 2
+---
+
+## Context
+
+TPSaaS helps companies manage vendor security risk: supplier onboarding, security assessments, evidence review, risk registers, audits, remediation, and certification. Every customer is a tenant with its own users, data, and subscription plan — so isolation failures are existential, not cosmetic.
+
+<Callout title="My role">
+  I architect the platform and am its top contributor (~45% of 3,240 commits across backend and frontend), while leading a 6-developer team and partnering with 2 business analysts on requirements, estimation, and releases.
+</Callout>
+
+## Architecture
+
+<ArchDiagram
+  layers={[
+    { label: "Frontend", items: ["Next.js 15 / React 19", "Role-aware dashboards", "SignalR notifications"] },
+    { label: "API", items: ["ASP.NET Core (.NET 8)", "413 REST endpoints", "CQRS — 342 handlers", "54 feature modules"] },
+    { label: "Cross-cutting", items: ["Multi-IdP OIDC SSO", "Multi-layer RBAC", "Tenant middleware", "Audit logging"] },
+    { label: "Data & Infra", items: ["PostgreSQL + EF Core", "ElastiCache Redis", "Hangfire jobs", "AWS ECS Fargate"] },
+  ]}
+/>
+
+## Key decisions
+
+**Tenancy enforced in the data layer.** Tenant scoping lives in EF Core global query filters plus middleware that resolves the tenant before any handler runs. Developers cannot forget a `WHERE TenantId = …` — the filter applies unless explicitly and visibly disabled, which code review treats as a red flag.
+
+**CQRS kept honest at scale.** 342 handlers across 54 modules stay navigable because each module owns its commands, queries, and validation — no shared god-services. New features follow a template, which is what makes a 6-developer team productive in parallel without merge wars.
+
+**Identity is pluggable.** Enterprise customers bring their own IdP: the platform speaks OIDC to Azure AD, Okta, Auth0, and others, layered under a role model that separates platform administrators from tenant roles.
+
+**Billing with webhooks, not polling.** Stripe subscriptions (including enterprise plans and quotas) sync through idempotent webhook processing; BitSight security ratings integrate with encrypted tokens and full API audit logging.
+
+## Results
+
+The platform runs on AWS ECS Fargate with RDS PostgreSQL, S3, Secrets Manager, and ElastiCache across development, UAT, and production environments; 13 Hangfire recurring jobs handle assessment reminders, syncs, and digests. In-app SignalR notifications pair with SES email delivery including bounce tracking.
+
+## What I'd do differently
+
+Introduce integration-test coverage per module earlier. The CQRS template made features fast to add; test scaffolding lagged behind it, and backfilling coverage is slower than growing it alongside.

@@ -1,0 +1,50 @@
+---
+title: "4.5 Years Evolving a Freight-Forwarding ERP"
+summary: "From feature developer to top individual contributor on a 12-project .NET solution — 25+ logistics and accounting integrations, the full rate-to-shipment lifecycle, and a live migration to .NET 10."
+role: "Top individual contributor (3,600+ commits); full-time 3 years, now part-time consulting"
+period: "2022 – present, Freightoscope (US, remote)"
+stack: [".NET 10", "Angular 13 → 20", "SQL Server", "Redis", "SignalR", "Azure DevOps", "Azure Functions", "SSE"]
+metrics:
+  - { label: "Commits over 4.5 years", value: "3,600+" }
+  - { label: "REST endpoints", value: "1,000+" }
+  - { label: "Partner integrations", value: "25+" }
+featured: true
+order: 3
+---
+
+## Context
+
+Freightoscope is a cloud ERP for freight forwarders: search rates, quote customers, book cargo, track shipments, invoice, and file customs — across air and sea, in many currencies. I joined in January 2022 and never fully left: three years full-time, and part-time consulting since, with 3,600+ commits as the platform's top individual contributor.
+
+<Callout title="Longevity as evidence">
+  Anyone can inherit a codebase; staying accountable to one for 4.5 years — through framework upgrades, integration churn, and production incidents — is the strongest proof of ownership I have.
+</Callout>
+
+## Architecture
+
+<ArchDiagram
+  layers={[
+    { label: "Clients", items: ["Angular 13 main app (526 components)", "Angular 20 customer portal"] },
+    { label: "API", items: ["ASP.NET Core — 159 controllers", "1,000+ REST endpoints", "SignalR realtime", "SSE streaming"] },
+    { label: "Integrations", items: ["Air/sea rates & booking partners", "FX rates", "4 accounting systems", "EDI mappings"] },
+    { label: "Data & Ops", items: ["SQL Server (views, procs)", "Redis cache", "Azure Functions", "5 Azure DevOps pipelines"] },
+  ]}
+/>
+
+## Key decisions
+
+**Integrations as a product surface.** 25+ partners — air and sea rate providers, booking channels, currency feeds, and accounting systems (QuickBooks, Xero, Zoho, Netvisor) — each with different auth, formats, and failure modes. Resilient wrappers with retries and clear operator-facing errors turned integration breakage from a support fire into a dashboard item.
+
+**The rate lifecycle end to end.** Bulk Excel rate ingestion feeds search; search feeds markup and quotation; quotations become bookings and shipments with e-AWB workflows and AES/ISF/AMS customs filings. Owning one vertical slice completely is why the numbers above are attributable to me rather than to a crowd.
+
+**Performance where users feel it.** Quotation searches stream thousands of live results over Server-Sent Events; Redis caches ports, carriers, units, and FX; hot SQL paths moved into tuned views and stored procedures with bulk inserts replacing row-by-row writes.
+
+**Upgrades as continuous work.** The 12-project solution migrated to .NET 10 while shipping features, and a new customer portal launched on Angular 20 beside the Angular 13 main app — modernization without a rewrite freeze.
+
+## Results
+
+The platform serves forwarders, customers, agents, and shippers with role-based flows, white-label email, PDF rate reports, 300+ report templates, and 6 role-based dashboards. Releases ship through 5 Azure DevOps CI/CD pipelines. I also mentored 2 junior developers to independent delivery.
+
+## What I'd do differently
+
+Push harder, earlier, for automated integration-contract tests around partner APIs. Most production incidents traced to silent partner-side changes that a nightly contract suite would have caught first.
