@@ -1,0 +1,50 @@
+---
+title: "RAG Chatbot for a Global Automotive Client"
+summary: "A production-grade retrieval-augmented generation backend answering vehicle owner-manual questions — hybrid retrieval, four-layer caching, and releases gated on measured quality SLOs."
+role: "Sole author of the Python/FastAPI backend; also built the .NET content platform feeding it"
+period: "2025 – 2026, Brain Station 23"
+stack: ["Python", "FastAPI", "Qdrant", "PostgreSQL", "Redis", "OpenAI", "Cohere", "BM25", "SSE"]
+metrics:
+  - { label: "Keyword recall@100", value: "96.9% → 100%" }
+  - { label: "Disambiguation win-rate", value: "100% (27 cases)" }
+  - { label: "Cache layers", value: "4 + singleflight" }
+featured: true
+order: 1
+---
+
+## Context
+
+A global automotive client needed drivers to get accurate answers from vehicle owner manuals — hundreds of pages per model, safety-critical content, multiple languages. Wrong answers about towing capacity or warning lights are not acceptable, so answer quality had to be measured, not assumed.
+
+<Callout title="My role">
+  I sole-authored the Python/FastAPI RAG backend and designed its Clean Architecture with CI-enforced import boundaries. I also built the .NET content platform that feeds manual content into ingestion, and wired the two together with a live contract test.
+</Callout>
+
+## Architecture
+
+<ArchDiagram
+  layers={[
+    { label: "Ingestion", items: ["Hierarchical chunking", "Entity extraction", "Batch embeddings", "Idempotent jobs"] },
+    { label: "Indexes", items: ["Dense vectors (Qdrant)", "Sparse BM25", "Entity keyword index"] },
+    { label: "Retrieval", items: ["Parallel dense + BM25", "RRF fusion", "Cohere rerank", "Confidence routing"] },
+    { label: "Serving", items: ["Structured answers + citations", "SSE streaming", "4-layer Redis cache", "Conversation memory"] },
+  ]}
+/>
+
+Queries fan out to dense and sparse search in parallel; results merge with reciprocal-rank fusion before reranking. Low-confidence retrievals route to clarification instead of hallucinated answers. Every answer carries validated citations back to manual sections.
+
+## Key decisions
+
+**Hybrid retrieval over pure vectors.** Owner manuals are full of exact tokens — part numbers, warning-light names, acronyms — that embeddings blur. Adding BM25 sparse retrieval and an exact-entity keyword index lifted recall@100 from 96.9% to 100% on the evaluation set, and disambiguation prompts now win 100% of 27 acronym-collision cases.
+
+**Four cache layers with singleflight.** Embedding reuse, retrieval results, full answers, and conversation context cache independently in Redis with distinct TTLs. Singleflight locks collapse concurrent identical requests into one upstream call — the difference between a cost spike and a flat line when many drivers ask the same question after a recall notice.
+
+**Releases gated on SLOs.** A behavioral evaluation harness runs before every release: at least 70% standard-answer rate, at least 80% citation coverage, at most 2% error rate. The suite spans ~196 backend tests plus architecture-boundary checks, so quality regressions block the release instead of reaching drivers.
+
+## Results
+
+Verified by the automated evaluation harness: 100% keyword recall@100, 100% disambiguation win-rate, structured answers with citation validation, SSE time-to-first-token designed against explicit latency targets. Multi-tenant-ready isolation is in place for rollout beyond the pilot.
+
+## What I'd do differently
+
+Start the evaluation harness on day one rather than mid-project — every retrieval decision became faster to make once changes could be scored against a fixed question set within minutes.
