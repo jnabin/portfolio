@@ -6,6 +6,7 @@ import { getAllProjects } from "@/lib/projects";
 import { ExperienceTimeline } from "@/components/experience-timeline";
 import { SkillsGrid } from "@/components/skills-grid";
 import { Beyond } from "@/components/beyond";
+import { HowIRun } from "@/components/how-i-run";
 import { Contact } from "@/components/contact";
 
 export const dynamic = "error";
@@ -24,6 +25,9 @@ export default function Home() {
       </Section>
       <Section id="evidence" title="Evidence">
         <EvidencePanel />
+      </Section>
+      <Section id="how-i-run" title="How I run projects — beyond the code">
+        <HowIRun />
       </Section>
       <Section id="experience" title="Experience">
         <ExperienceTimeline />

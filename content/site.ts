@@ -27,12 +27,47 @@ export const site = {
     upwork: "https://www.upwork.com/freelancers/~014a55b53d36d618d6",
   },
   evidence: [
+    { label: "Team led day-to-day", value: "6 developers — presales, estimation, releases" },
+    { label: "Platforms architected", value: "2 — compliance SaaS & automotive AI" },
+    { label: "Client contracts delivered", value: "20 at 100% Job Success" },
     { label: "RAG keyword recall@100", value: "96.9% → 100%" },
     { label: "Disambiguation win-rate", value: "100% across 27 cases" },
     { label: "SLO release gates", value: "≥70% answers · ≥80% citations · ≤2% errors" },
     { label: "REST endpoints across platforms", value: "1,400+" },
     { label: "External integrations", value: "25+ logistics & accounting partners" },
     { label: "One product, 4.5 years", value: "3,600+ commits, top contributor" },
+  ],
+  howIRun: [
+    {
+      title: "Team leadership",
+      body: "I lead a 6-developer team at Brain Station 23 — planning, reviews and releases. Earlier I guided 2 intern developers at Democratik.",
+      evidence: "11-service platform delivered under my leadership",
+    },
+    {
+      title: "Presales",
+      body: "Presales for enterprise .NET and AI engagements — solution outlines, effort estimates and proposals that turn briefs into funded projects.",
+      evidence: "Presales · requirement analysis · estimation · releases",
+    },
+    {
+      title: "Client-facing requirement analysis",
+      body: "Requirement sessions directly with clients; vague briefs broken into task-level scope everyone can agree on before work starts.",
+      evidence: "20 direct-client contracts · 100% Job Success",
+    },
+    {
+      title: "Architecture planning across projects",
+      body: "Architect of a multi-tenant compliance SaaS (CQRS, 54 modules) and an automotive AI platform — plus an 11-service modular monolith with Kafka outbox.",
+      evidence: "413 REST endpoints · recall@100 96.9% → 100%",
+    },
+    {
+      title: "Effort estimation",
+      body: "Line-by-line scope → per-task hour workbook the client can inspect → calendar-dated timeline → fixed quote tracked against the workbook.",
+      evidence: "Workbook-based quotes, progress reported against them",
+    },
+    {
+      title: "Project delivery",
+      body: "Releases gated on measured quality SLOs, 5 CI/CD pipelines, and a live migration of a 12-project ERP to .NET 10 without pausing delivery.",
+      evidence: "SLO gates: ≥70% answers · ≥80% citations · ≤2% errors",
+    },
   ],
   experience: [
     {
