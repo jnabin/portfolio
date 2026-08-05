@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { IntroVideo } from "@/components/intro-video";
 import { site } from "@/content/site";
 
 export function Hero() {
@@ -24,6 +25,7 @@ export function Hero() {
             >
               Download CV
             </a>
+            <IntroVideo />
           </div>
         </div>
         <div className="flex flex-col items-center gap-3 self-center md:self-auto">

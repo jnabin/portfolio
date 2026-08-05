@@ -14,6 +14,12 @@ export const site = {
   intro:
     "I build backend platforms and AI systems that ship — from multi-tenant SaaS to a production-grade RAG chatbot for a global automotive client. Currently leading a 6-developer team at Brain Station 23.",
   heroStat: { value: "100%", label: "Upwork Job Success · 2,390+ hrs" },
+  introVideo: {
+    youtubeId: "NOW9dUA7OOM",
+    label: "Watch 60-sec intro",
+    title: "60-second introduction",
+    posterSrc: "/intro-video-poster.jpg",
+  },
   cvPath: "/cv/Jahangir_Alam_Nabin_CV.pdf",
   contact: {
     email: "jahangirnabin2@gmail.com",
