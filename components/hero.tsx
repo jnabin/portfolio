@@ -64,7 +64,26 @@ export function Hero() {
             className="rounded-full border-4 border-bg shadow-md"
           />
           <div className="rounded-lg border border-border bg-bg px-4 py-2 text-center">
-            <div className="text-lg font-extrabold text-brand">{site.heroStat.value}</div>
+            <div
+              role="img"
+              aria-label="Rated 5 out of 5 stars on Upwork"
+              className="flex items-center justify-center gap-0.5 text-amber-400"
+            >
+              {Array.from({ length: 5 }, (_, i) => (
+                <svg
+                  key={i}
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)]"
+                  aria-hidden="true"
+                >
+                  <path d="M12 2l2.9 6.26 6.6.7-4.95 4.5 1.4 6.54L12 16.77 6.05 20l1.4-6.54L2.5 8.96l6.6-.7z" />
+                </svg>
+              ))}
+            </div>
+            <div className="mt-1 text-lg font-extrabold text-brand">{site.heroStat.value}</div>
             <div className="text-xs text-fg-muted">{site.heroStat.label}</div>
           </div>
         </div>

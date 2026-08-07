@@ -12,7 +12,7 @@ export const site = {
   name: "Jahangir Alam Nabin",
   headline: "Senior Software Engineer — .NET, Distributed Systems & Applied AI",
   intro:
-    "I build backend platforms and AI systems that ship — from multi-tenant SaaS to a production-grade RAG chatbot for a global automotive client. Currently leading a 6-developer team at Brain Station 23.",
+    "I build backend platforms and AI systems that ship — from multi-tenant SaaS to a production-grade RAG chatbot for a global automotive client — and I'm just as at home on IBM z/OS mainframes: JCL, CICS, REXX, and z/OS-to-cloud integration. Currently leading a 6-developer team at Brain Station 23.",
   heroStat: { value: "100%", label: "Upwork Job Success · 2,390+ hrs" },
   introVideo: {
     youtubeId: "NOW9dUA7OOM",
