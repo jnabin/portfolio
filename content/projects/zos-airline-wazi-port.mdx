@@ -1,0 +1,50 @@
+---
+title: "Porting a COBOL/CICS/DB2 Airline System to IBM Cloud Wazi"
+summary: "An open-source COBOL airline management system taken from a Git clone to a fully working online + batch application on a fresh IBM z/OS 3.1 instance on IBM Cloud Wazi — 30+ deployment errors diagnosed across 11 phases, from VPN networking to CICS pseudo-conversational bugs. Demonstrated at a conference in Japan."
+role: "Sole engineer — networking, encoding, JCL, DB2 setup, CICS configuration, compilation, debugging"
+period: "March 2026, independent project"
+stack: ["IBM z/OS 3.1", "IBM Cloud Wazi", "CICS TS 6.2", "DB2 v13", "Enterprise COBOL 6.5", "JCL", "BMS", "Zowe CLI", "TN3270"]
+metrics:
+  - { label: "Errors diagnosed", value: "30+ across 11 phases" }
+  - { label: "Programs deployed", value: "6 CICS + 3 batch" }
+  - { label: "Runbook produced", value: "1,400-line deployment guide" }
+featured: false
+order: 7
+---
+
+## Context
+
+An open-source COBOL/CICS/DB2 airline management system existed only as a Git repository — source files that had clearly once run on a mainframe, with none of the infrastructure that made them run. The goal: bring it to life on a real z/OS system. I provisioned a fresh IBM z/OS 3.1 Wazi Dev/Test instance on IBM Cloud — zero prior configuration — and took the application from clone to a working TN3270 green-screen system, then demonstrated it at a conference in Japan.
+
+<Callout title="My role">
+  Everything between the Git clone and the working green screen was mine: OpenVPN and security-group networking into the IBM Cloud VPC, Zowe CLI setup, EBCDIC conversion, 12 PDS dataset allocations, 20+ JCL jobs for compile/bind/deploy, DB2 database and plan setup, CICS resource definitions, BMS mapset assembly, and debugging pseudo-conversational COBOL at runtime.
+</Callout>
+
+## Architecture
+
+<ArchDiagram
+  layers={[
+    { label: "Access", items: ["TN3270 / TN3270S", "OpenVPN to IBM Cloud VPC", "z/OSMF REST (port 10443)", "Zowe CLI"] },
+    { label: "Online", items: ["CICS TS 6.2 region", "6 COBOL programs", "5 BMS mapsets", "Pseudo-conversational flow"] },
+    { label: "Batch", items: ["3 batch COBOL programs", "20+ JCL jobs", "12 PDS datasets"] },
+    { label: "Data", items: ["DB2 v13", "10 tables with foreign keys", "Plan/package binds"] },
+  ]}
+/>
+
+The online side is a chain of CICS transactions — login with credential verification, flight search, ticket search, and a two-screen ticket sale — passing state between pseudo-conversational tasks via COMMAREA. Batch programs load employees, passengers, and flights into DB2 before the online system can do anything useful.
+
+## Key decisions
+
+**Standardize on Zowe CLI over FTP/SFTP.** Plain SFTP transfers bytes exactly — which on z/OS means every uploaded source file arrived as unreadable ASCII in an EBCDIC world, and CRLF line endings silently ate a byte of each 80-column record. Zowe CLI's z/OSMF REST path converts codepages and writes PDS members natively, eliminating an entire class of encoding bugs in one move.
+
+**Treat networking as phase zero.** The Wazi instance sat on a private IP inside a VPC. Before any mainframe work: OpenVPN into IBM Cloud, security-group rules for TN3270, SSH, and z/OSMF — which itself runs on non-standard port 10443 on this image, discovered the hard way.
+
+**Diagnose, don't guess.** The 30+ resolved errors were each run to root cause rather than worked around: a DB2 catalog alias collision with a sample database, the COBOL compiler library not being APF-authorized, BMS assembly failures, JCL statements truncated at column 80, CICS pseudo-conversational state bugs that only appeared on the second screen, and terminal emulators that rendered the same BMS map differently.
+
+## Results
+
+A fully working online + batch airline system on a clean z/OS instance: 12 PDS datasets, 10 DB2 tables, 6 CICS programs, 3 batch programs, and 5 BMS mapsets deployed via 20+ JCL jobs. The entire journey is captured in a 1,400-line deployment runbook that makes the port reproducible end to end — and the system was demonstrated live at a conference in Japan.
+
+## What I'd do differently
+
+Script the whole pipeline with Zowe CLI from day one instead of discovering it mid-project — and treat dataset allocation and DB2 binds as code from the start rather than one-off ISPF panel work.

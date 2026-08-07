@@ -16,6 +16,9 @@ const pages = [
   { file: "freightoscope-platform", title: "Freight ERP Case Study", subtitle: "4.5 years · 25+ integrations · 3,600+ commits" },
   { file: "bizxtract-licensing", title: "Fail-Closed Licensing Case Study", subtitle: "Ed25519 entitlements · offline grace · idempotent webhooks" },
   { file: "democratik-campaign-crm", title: "Campaign CRM Case Study", subtitle: "One product, five surfaces · 821 commits · canvassing, dialing, donations" },
+  { file: "mainframe", title: "Mainframe & z/OS", subtitle: "IBM z/OS · JCL · CICS · REXX · SFTP · IBM Cloud Wazi" },
+  { file: "zos-airline-wazi-port", title: "z/OS Airline Port Case Study", subtitle: "COBOL/CICS/DB2 on IBM Cloud Wazi · 30+ errors diagnosed · shown in Japan" },
+  { file: "zos-sftp-cloud-integration", title: "z/OS SFTP Consulting Case Study", subtitle: "BPXBATCH silent failure · CC 3840 decoded · 4 defects from one review" },
 ];
 
 const font = await fetch("https://unpkg.com/@fontsource/inter@5.0.16/files/inter-latin-700-normal.woff").then((r) => {

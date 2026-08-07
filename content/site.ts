@@ -69,6 +69,23 @@ export const site = {
       evidence: "SLO gates: ≥70% answers · ≥80% citations · ≤2% errors",
     },
   ],
+  mainframe: [
+    {
+      title: "IBM Cloud Wazi port",
+      body: "Ported and extended an open-source COBOL/CICS/DB2 airline system to a fresh z/OS 3.1 instance on IBM Cloud Wazi — VPN networking to green screen, 30+ errors diagnosed. Demonstrated at a conference in Japan.",
+      evidence: "6 CICS + 3 batch programs · 10 DB2 tables",
+    },
+    {
+      title: "z/OS → cloud SFTP consulting",
+      body: "For a US mainframe software vendor: root-caused a JCL job that reported success while its BPXBATCH SFTP upload silently failed; shipped production JCL, a REXX generator, and runbooks.",
+      evidence: "4 defects from one JCL review",
+    },
+    {
+      title: "The toolbox",
+      body: "JCL, CICS, BMS, COBOL, DB2, REXX, BPXBATCH/USS, EBCDIC conversion, Zowe CLI, TN3270 — modern engineering discipline applied to big iron.",
+      evidence: "Two written-up case studies",
+    },
+  ],
   experience: [
     {
       title: "Senior Software Engineer",
@@ -133,9 +150,9 @@ export const site = {
     { category: "Architecture & Messaging", items: ["Clean Architecture", "CQRS (MediatR)", "Modular monoliths", "Microservices", "Domain-Driven Design", "Kafka", "MassTransit", "Transactional outbox", "SOLID"] },
     { category: "Data & Cloud", items: ["PostgreSQL", "SQL Server", "MongoDB", "Redis", "EF Core", "Dapper", "AWS (EC2, S3, ECS Fargate, RDS)", "Azure (Functions, Blob, DevOps)", "Docker", "GitHub Actions", "IBM Cloud"] },
     { category: "Quality & Security", items: ["xUnit", "Testcontainers", "Architecture tests", "pytest", "SonarQube", "Serilog/Seq", "Prometheus", "Keycloak", "SSO/OIDC", "JWT", "RBAC", "Agile/Scrum", "AI-assisted engineering"] },
+    { category: "Mainframe & z/OS", items: ["IBM z/OS", "JCL", "CICS", "BMS", "COBOL", "DB2 for z/OS", "REXX", "BPXBATCH & USS", "SFTP (Co:Z, OpenSSH)", "Zowe CLI", "IBM Cloud Wazi", "EBCDIC conversion", "TN3270"] },
   ],
   beyond: [
-    "Ported and extended a COBOL/CICS/DB2 airline-booking system to IBM Cloud Wazi (z/OS 3.1, CICS TS 6.2, DB2 v13) — demonstrated at a conference in Japan.",
     "Independent freelance record: 100% Job Success across 20 contracts and 2,390+ logged hours.",
     "Ship complete products solo: a licensed cross-platform desktop app with fail-closed Ed25519 entitlements.",
   ],

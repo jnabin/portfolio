@@ -14,8 +14,8 @@ describe("site content integrity", () => {
     expect(site.experience[5].company).toContain("Code Source");
   });
 
-  it("has 6 skill categories and complete contact links", () => {
-    expect(site.skills).toHaveLength(6);
+  it("has 7 skill categories and complete contact links", () => {
+    expect(site.skills).toHaveLength(7);
     expect(site.contact.email).toContain("@");
     expect(site.contact.linkedin).toContain("linkedin.com");
     expect(site.contact.upwork).toContain("upwork.com");

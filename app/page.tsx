@@ -7,6 +7,7 @@ import { ExperienceTimeline } from "@/components/experience-timeline";
 import { SkillsGrid } from "@/components/skills-grid";
 import { Beyond } from "@/components/beyond";
 import { HowIRun } from "@/components/how-i-run";
+import { MainframeHighlights } from "@/components/mainframe-highlights";
 import { Contact } from "@/components/contact";
 
 export const dynamic = "error";
@@ -28,6 +29,9 @@ export default function Home() {
       </Section>
       <Section id="how-i-run" title="How I run projects — beyond the code">
         <HowIRun />
+      </Section>
+      <Section id="mainframe" title="Mainframe & z/OS">
+        <MainframeHighlights />
       </Section>
       <Section id="experience" title="Experience">
         <ExperienceTimeline />

@@ -8,6 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: SITE_URL, priority: 1 },
     { url: `${SITE_URL}/projects`, priority: 0.8 },
+    { url: `${SITE_URL}/mainframe`, priority: 0.8 },
     ...getAllProjects().map((p) => ({ url: `${SITE_URL}/projects/${p.slug}`, priority: 0.7 })),
   ];
 }

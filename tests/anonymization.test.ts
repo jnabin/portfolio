@@ -8,6 +8,12 @@ const FORBIDDEN = [
   ["nd", "g-"].join(""),
   ["cm", "cg"].join(""),
   ["c-", "app"].join(""),
+  ["mar", "bl"].join(""),
+  ["tra", "kker"].join(""),
+  ["main", "tec"].join(""),
+  ["myco", "bol"].join(""),
+  ["el", "gie"].join(""),
+  ["walter ", "craig"].join(""),
 ].map((s) => s.toLowerCase());
 
 const SELF = "tests/anonymization.test.ts";
