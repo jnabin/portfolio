@@ -12,6 +12,7 @@ const pages = [
   { file: "projects", title: "Projects & Case Studies", subtitle: "Production RAG · Multi-tenant SaaS · Freight ERP · Licensed desktop product" },
   { file: "automotive-rag-chatbot", title: "RAG Chatbot Case Study", subtitle: "Hybrid retrieval · recall@100 raised to 100% · SLO release gates" },
   { file: "automotive-content-platform", title: "Automotive Platform Case Study", subtitle: "Modular monolith · transactional outbox · Kafka · 585 tests" },
+  { file: "airflow-bigquery-weather-pipeline", title: "Airflow + BigQuery Data Layer", subtitle: "65-way mapped backfill · idempotent MERGE · 1.9 MB → 145 KB per chunk · CI-gated DAGs" },
   { file: "tpsaas-compliance-platform", title: "Multi-Tenant SaaS Case Study", subtitle: "413 endpoints · CQRS · EF Core tenant isolation · Stripe" },
   { file: "freightoscope-platform", title: "Freight ERP Case Study", subtitle: "4.5 years · 25+ integrations · 3,600+ commits" },
   { file: "bizxtract-licensing", title: "Fail-Closed Licensing Case Study", subtitle: "Ed25519 entitlements · offline grace · idempotent webhooks" },
