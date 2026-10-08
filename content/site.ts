@@ -104,6 +104,12 @@ export const site = {
       rating: 5,
     },
     {
+      quote: "He is new to Upwork But he really have the skills to tackle the solution of the problem. It was really nice working with him. He even stayed the almost whole night to complete the project. Really hard working and honest guy. 100% recommended to the community",
+      context: "JavaScript/jQuery quick fix",
+      detail: "Endorsed: solution oriented, collaborative, reliable",
+      rating: 5,
+    },
+    {
       quote: "Jahangir is an excellent developer and great to work with, if you're looking for a skilled developer with both front and back end skills I highly recommend working with him.",
       context: "ASP.NET web application",
       detail: "Endorsed: committed to quality, collaborative",
@@ -113,6 +119,12 @@ export const site = {
       quote: "he was so accurate and fast . We agreed to work with him again for next one. nice guy",
       context: "Angular responsiveness fix",
       detail: "Endorsed: detail oriented",
+      rating: 5,
+    },
+    {
+      quote: "Nice work i am very happy with your work.",
+      context: "Angular e-commerce component",
+      detail: "Repeat client · second project",
       rating: 5,
     },
     {
