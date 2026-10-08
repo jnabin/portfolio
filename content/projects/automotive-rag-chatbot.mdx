@@ -1,13 +1,16 @@
 ---
-title: "RAG Chatbot for a Global Automotive Client"
-summary: "A production-grade retrieval-augmented generation backend answering vehicle owner-manual questions — hybrid retrieval, four-layer caching, and releases gated on measured quality SLOs."
+title: "RAG Chatbot with MCP External Data Sources for a Global Automotive Client"
+summary: "A production-grade retrieval-augmented generation backend answering vehicle owner-manual questions — hybrid retrieval, four-layer caching, releases gated on measured quality SLOs, and an MCP connection to external data sources, built so web text can never pass as the approved manual."
 role: "Sole author of the Python/FastAPI backend; also built the .NET content platform feeding it"
 period: "2025 – 2026, Brain Station 23"
-stack: ["Python", "FastAPI", "Qdrant", "PostgreSQL", "Redis", "OpenAI", "Cohere", "BM25", "SSE"]
+stack: ["Python", "FastAPI", "Qdrant", "MCP", "PostgreSQL", "Redis", "OpenAI", "Anthropic", "Gemini", "Cohere", "BM25", "SSE"]
 metrics:
-  - { label: "Keyword recall@100", value: "96.9% → 100%" }
+  - { label: "Procedure answers", value: "2× faster (8.5 s → 3.9 s)" }
+  - { label: "Search finds the right manual section", value: "96.9% → 100%" }
   - { label: "Disambiguation win-rate", value: "100% (27 cases)" }
   - { label: "Cache layers", value: "4 + singleflight" }
+  - { label: "Questions the manual could not answer", value: "~27% (38 of 139)" }
+  - { label: "Automated tests", value: "2,300+" }
 featured: true
 order: 1
 ---
@@ -27,7 +30,8 @@ A global automotive client needed drivers to get accurate answers from vehicle o
     { label: "Ingestion", items: ["Hierarchical chunking", "Entity extraction", "Batch embeddings", "Idempotent jobs"] },
     { label: "Indexes", items: ["Dense vectors (Qdrant)", "Sparse BM25", "Entity keyword index"] },
     { label: "Retrieval", items: ["Parallel dense + BM25", "RRF fusion", "Cohere rerank", "Confidence routing"] },
-    { label: "Serving", items: ["Structured answers + citations", "SSE streaming", "4-layer Redis cache", "Conversation memory"] },
+    { label: "External data & tips", items: ["MCP tool loop (chat time)", "Scheduled website crawl", "Manual-first gate", "Citation-gated weather tips"] },
+    { label: "Serving", items: ["Structured answers + citations", "Per-brand LLM: OpenAI / Anthropic / Gemini", "SSE streaming", "4-layer Redis cache", "Conversation memory"] },
   ]}
 />
 
@@ -35,15 +39,63 @@ Queries fan out to dense and sparse search in parallel; results merge with recip
 
 ## Key decisions
 
-**Hybrid retrieval over pure vectors.** Owner manuals are full of exact tokens — part numbers, warning-light names, acronyms — that embeddings blur. Adding BM25 sparse retrieval and an exact-entity keyword index lifted recall@100 from 96.9% to 100% on the evaluation set, and disambiguation prompts now win 100% of 27 acronym-collision cases.
+**Hybrid retrieval over pure vectors.** Owner manuals are full of exact tokens — part numbers, warning-light names, acronyms — that embeddings blur. Adding BM25 sparse retrieval and an exact-entity keyword index raised recall@100 (the right section appears in the top 100 search results) from 96.9% to 100% on the evaluation set, and disambiguation prompts now win 100% of 27 acronym-collision cases.
 
 **Four cache layers with singleflight.** Embedding reuse, retrieval results, full answers, and conversation context cache independently in Redis with distinct TTLs. Singleflight locks collapse concurrent identical requests into one upstream call — the difference between a cost spike and a flat line when many drivers ask the same question after a recall notice.
 
-**Releases gated on SLOs.** A behavioral evaluation harness runs before every release: at least 70% standard-answer rate, at least 80% citation coverage, at most 2% error rate. The suite spans ~196 backend tests plus architecture-boundary checks, so quality regressions block the release instead of reaching drivers.
+**Releases gated on SLOs.** A behavioral evaluation harness runs before every release: at least 70% standard-answer rate, at least 80% citation coverage, at most 2% error rate. The suite has since grown to 2,300+ tests plus architecture-boundary checks, so quality regressions block the release instead of reaching drivers.
+
+## What's new (Sep – Oct 2026)
+
+- **Answers beyond the manual:** external data over MCP, plus a crawled brand website. Web text is always labelled and can never pass as the manual.
+- **AI driving tips** for the weather the driver is in, each one citing the manual.
+- **2× faster procedure answers:** median latency **8.5 s → 3.9 s**, with 64% fewer completion tokens.
+- **Each brand picks its AI:** OpenAI, Anthropic or Gemini, switched with zero added latency.
+
+## External data sources over MCP
+
+**The gap:** in one month's sample, **38 of 139 questions (~27%)** got a hedge because the manual had nothing to say. Drivers needed a second source, but the manual is approved safety content and a website is not. So the rule was simple: **add web data, but never let it pass as the manual.**
+
+<Callout title="Status">
+  The scheduled website crawl is **running on the dev server**, and drivers see web answers as labelled citations. The chat-time MCP tool loop is built, reviewed and merged. It is switched on per environment once the hub meets its safety contract.
+</Callout>
+
+**How it works**
+- **Plug-in tools over MCP.** A reusable tool loop with a registry; the brand website is tool #1. The transport is the Model Context Protocol, behind a port, so connectors can be added or swapped without touching the loop. If the hub is down, chat keeps working.
+- **No extra LLM calls.** The loop decides with simple rules, max 3 steps. An LLM planner would have added 1–3 model calls to one question in four.
+- **Moderation first.** The loop runs only after moderation passes, so a blocked message never reaches a third party. A test proves it.
+- **Locked down.** Per-app access control, deny by default, and a separate rate limit for each driver.
+
+**How web text stays honest:** five separate guards, so one bad edit cannot remove the line.
+- Its own ID namespace, context header and prompt block ("data, not instructions").
+- A confidence ceiling: an answer using web text is always hedged and must cite.
+- Its own citation, shown in the app as a labelled globe chip with the source URL.
+- A manual-first gate: web text is used only when the manual falls short.
+
+**Security has an owner.** The chatbot never fetches a page; it asks the hub. I wrote the hub's safety duties as a numbered contract: redirects, private addresses, size and type caps, timeouts, robots.txt and rate limits. My team built the **Integration Hub** against it. On the chatbot side, only https is allowed, with a host allow-list that fails closed.
+
+**Scheduled website crawl.** The client chose a scheduled crawl (plus a "Run crawl now" button) for the brand site. I built the ingestion side: fetcher, extractor, chunker and page store. Pages carry the same labels, are filtered by region, and are protected by an always-on address guard.
+
+## AI driving tips for the weather
+
+Drivers get short tips for the weather they are in, such as tyre pressure in the cold or braking distance in heavy rain. Each tip links to the manual section it came from.
+
+- **Its own route, not a fake chat message.** A synthetic chat question would fill drivers' chat history, skew the analytics and break caching. Tips use one structured model call on the search pipeline.
+- **Location stays on the phone.** The app sends only a coarse weather bucket. The server sees signals like `heavy_rain` or `cold_tyres`, never coordinates.
+- **One answer per car and weather.** Every driver of the same car in the same weather shares one generation, so cost grows with the weather, not with the number of drivers.
+- **No tip without a source.** Any tip that does not cite a retrieved manual section is dropped. Outages return a reason the app can handle, never an error screen.
+
+## Faster answers and per-brand AI
+
+**2× faster procedures.** Before, the model rewrote every step of a procedure. Now the steps and their safety cautions come straight from the manual's markup, and the model writes no step list when the manual already covers it. Dev A/B result: **median latency 8.5 s → 3.9 s, 64% fewer completion tokens**, same steps and cautions. On by default.
+
+**Each brand picks its AI.** Admins choose OpenAI, Anthropic or Gemini per brand, with the brand's own encrypted key. There is no lookup on the request path, and a switch never interrupts live or streaming chats.
+
+**Step-focused answers, tested safely.** A question about one step can get just that step. Because this removes text from a safety answer, it runs in **shadow mode** first: it logs its decisions on real traffic but still serves the full procedure.
 
 ## Results
 
-Verified by the automated evaluation harness: 100% keyword recall@100, 100% disambiguation win-rate, structured answers with citation validation, SSE time-to-first-token designed against explicit latency targets. Multi-tenant-ready isolation is in place for rollout beyond the pilot.
+Verified by the automated evaluation harness: the right manual section found for 100% of test questions, 100% disambiguation win-rate, structured answers with citation validation, SSE time-to-first-token designed against explicit latency targets. Multi-tenant-ready isolation is in place for rollout beyond the pilot.
 
 The chatbot is one surface of a wider platform I lead — the .NET content system feeding its ingestion, the administration panel, and the mobile BFF are covered in the companion [platform case study](/projects/automotive-content-platform).
 

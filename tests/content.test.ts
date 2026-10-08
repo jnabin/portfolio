@@ -24,4 +24,18 @@ describe("site content integrity", () => {
   it("evidence panel has at least 5 verified stats", () => {
     expect(site.evidence.length).toBeGreaterThanOrEqual(5);
   });
+
+  it("shows at least 3 verbatim 5-star client testimonials", () => {
+    expect(site.testimonials.length).toBeGreaterThanOrEqual(3);
+    for (const t of site.testimonials) {
+      expect(t.quote.length).toBeGreaterThan(10);
+      expect(t.context.length).toBeGreaterThan(3);
+      expect(t.rating).toBe(5);
+    }
+  });
+
+  it("states the current Upwork record", () => {
+    expect(site.heroStat.label).toContain("2,439");
+    expect(site.heroStat.label).toContain("Top Rated");
+  });
 });

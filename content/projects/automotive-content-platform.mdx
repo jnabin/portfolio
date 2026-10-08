@@ -6,7 +6,7 @@ period: "2025 – 2026, Brain Station 23"
 stack: [".NET 9", "PostgreSQL 17", "Kafka", "MassTransit", "Keycloak", "React/Next.js", "Redis", "Quartz", "Testcontainers"]
 metrics:
   - { label: "Bounded services", value: "11" }
-  - { label: "Automated tests", value: "585" }
+  - { label: "Backend test methods", value: "4,300+" }
   - { label: "Delivery surfaces", value: "4" }
 featured: true
 order: 2
@@ -41,7 +41,15 @@ A global automotive client needed one platform to manage vehicle content — man
 
 **A BFF, not a general API, for mobile.** The mobile app talks to a dedicated .NET 9 backend-for-frontend that aggregates and shapes platform data per screen — mobile releases stop being hostage to platform API changes.
 
-**Quality gates that bite.** 585 automated tests including Testcontainers-backed integration suites and the architecture-boundary checks, with SonarQube on CI — plus a live contract test proving the content platform's output matches what the chatbot's ingestion expects.
+**Quality gates that bite.** 4,300+ backend test methods, including Testcontainers-backed integration suites and the architecture-boundary checks, with SonarQube on CI — plus a live contract test proving the content platform's output matches what the chatbot's ingestion expects.
+
+## Latest additions (Sep – Oct 2026)
+
+- **Website sources for the chatbot.** A new domain for brand and vehicle URLs, with a host allow-list, crawl runs and a "Run crawl now" button. It feeds the chatbot's [labelled web index](/projects/automotive-rag-chatbot) and is running on the dev server.
+- **Each brand picks its AI.** OpenAI, Anthropic or Gemini per brand, with per-1M-token prices in the dropdown. The admin can see whether the chatbot accepted the choice.
+- **Analytics that answer "what does AI cost us?"** Active users with a drill-down, and an estimated AI cost covering chat, weather tips and content embedding. Plus sortable question grids, per-variant ratings and feedback filters.
+- **Safer admin work.** Smart delete for brands and regions created by mistake, dealer-locator links per region, and support-handoff settings with a verified recipient.
+- **Privacy operations.** A GDPR erasure runbook across every service, and legal pages in 4 languages.
 
 ## Results
 

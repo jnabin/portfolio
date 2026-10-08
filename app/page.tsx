@@ -9,6 +9,7 @@ import { Beyond } from "@/components/beyond";
 import { HowIRun } from "@/components/how-i-run";
 import { MainframeHighlights } from "@/components/mainframe-highlights";
 import { Contact } from "@/components/contact";
+import { Testimonials } from "@/components/testimonials";
 
 export const dynamic = "error";
 
@@ -23,6 +24,9 @@ export default function Home() {
             <ProjectCard key={p.slug} project={p} />
           ))}
         </div>
+      </Section>
+      <Section id="clients" title="What clients say">
+        <Testimonials />
       </Section>
       <Section id="evidence" title="Evidence">
         <EvidencePanel />

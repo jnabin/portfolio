@@ -9,9 +9,11 @@ const SITE_HOST = new URL(SITE_URL).host;
 
 const pages = [
   { file: "home", title: "Jahangir Nabin", subtitle: "Senior Software Engineer — .NET, Distributed Systems & Applied AI" },
-  { file: "projects", title: "Projects & Case Studies", subtitle: "Production RAG · Multi-tenant SaaS · Freight ERP · Licensed desktop product" },
-  { file: "automotive-rag-chatbot", title: "RAG Chatbot Case Study", subtitle: "Hybrid retrieval · recall@100 raised to 100% · SLO release gates" },
-  { file: "automotive-content-platform", title: "Automotive Platform Case Study", subtitle: "Modular monolith · transactional outbox · Kafka · 585 tests" },
+  { file: "projects", title: "Projects & Case Studies", subtitle: "Production RAG + MCP · Android + Go product · Multi-tenant SaaS · Freight ERP" },
+  { file: "automotive-rag-chatbot", title: "RAG Chatbot Case Study", subtitle: "Owner-manual AI · MCP external data · quality-gated releases" },
+  { file: "automotive-content-platform", title: "Automotive Platform Case Study", subtitle: "Modular monolith · transactional outbox · Kafka · 4,300+ tests" },
+  { file: "automotive-driver-app", title: "Driver App + Mobile BFF", subtitle: "Flutter · .NET BFF · consent & GDPR · AI weather tips · per-user data" },
+  { file: "family-nearby", title: "Family Nearby", subtitle: "Android + Go · live WebSocket map · tag-to-prod CI/CD · built solo with Claude Code" },
   { file: "airflow-bigquery-weather-pipeline", title: "Airflow + BigQuery Data Layer", subtitle: "65-way mapped backfill · idempotent MERGE · 1.9 MB → 145 KB per chunk · CI-gated DAGs" },
   { file: "tpsaas-compliance-platform", title: "Multi-Tenant SaaS Case Study", subtitle: "413 endpoints · CQRS · EF Core tenant isolation · Stripe" },
   { file: "freightoscope-platform", title: "Freight ERP Case Study", subtitle: "4.5 years · 25+ integrations · 3,600+ commits" },

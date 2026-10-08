@@ -1,0 +1,79 @@
+---
+title: "Family Nearby: an Android Family-Location App on a Go Backend, Built Solo"
+summary: "My own product. A family location-sharing app shaped by 12,180 competitor reviews, with a Kotlin/Compose Android app, a single Go server with a live WebSocket map, and tag-to-production CI/CD with automatic rollback. Built with Claude Code and now in Google Play review."
+role: "Founder and sole engineer: product research, Android app, Go server, infrastructure, CI/CD, website"
+period: "Sep – Oct 2026, own product (in Google Play review)"
+stack: ["Go", "Kotlin", "Jetpack Compose", "PostgreSQL + TimescaleDB", "WebSocket", "Protobuf", "Mapbox", "Cloudflare", "GitHub Actions", "Docker", "Caddy"]
+metrics:
+  - { label: "Automated tests", value: "4,300+ (1,204 Go · 3,134 Kotlin)" }
+  - { label: "First commit to review-ready", value: "~2 weeks" }
+  - { label: "Release path", value: "git tag → prod, auto-rollback" }
+featured: true
+order: 4
+---
+
+## The brief
+
+Families use location apps every day, and they complain about the same things: **stale locations, late alerts, battery drain and buggy updates.** Before writing code, I read the market leader's reviews, **12,180 of them**, and turned each top complaint into a target I could measure:
+
+- Fresh location **within 60 seconds** of a refresh.
+- A place alert **within 30 seconds** of a confirmed arrival.
+- The map always shows **how old** each location is.
+
+<Callout title="Live product">
+  Website: [familynearby.website](https://familynearby.website). The Android app is in Google Play review. The screens below come from the app's demo build with a sample family.
+</Callout>
+
+<PhoneGallery
+  shots={[
+    { src: "/projects/family-nearby/map.webp", alt: "Family map with photo pins: members walking, driving with speed and a direction cone, on a train, at school, and one phone offline at 4% battery.", caption: "Live family map" },
+    { src: "/projects/family-nearby/place.webp", alt: "Place editor: a circle on the map, a size slider, and Arrives and Leaves alerts for each person.", caption: "Places and arrival alerts" },
+    { src: "/projects/family-nearby/history.webp", alt: "Today's location history: home, a short walk, bus or train, then school.", caption: "Location history" },
+    { src: "/projects/family-nearby/no-show.webp", alt: "No-show alert setup: alert if Grandpa has not reached the senior center by 10:00 AM on weekdays.", caption: "No-show alerts" },
+    { src: "/projects/family-nearby/circle.webp", alt: "Circle admin screen: a join request and a request to pause sharing for one hour, with approve and decline buttons.", caption: "Circle requests" },
+    { src: "/projects/family-nearby/alerts.webp", alt: "Notification settings: alert types per person, quiet hours from 10 PM to 7 AM, no ads.", caption: "Alert settings" },
+  ]}
+/>
+
+## Architecture
+
+<ArchDiagram
+  layers={[
+    { label: "Android app", items: ["Kotlin + Jetpack Compose", "Shared Kotlin core (domain rules)", "Location engine (WorkManager, geofences)", "Mapbox map", "Home-screen widgets"] },
+    { label: "Edge", items: ["Cloudflare DNS, TLS, DDoS", "Caddy reverse proxy", "Website on Cloudflare Pages"] },
+    { label: "Go server (one binary)", items: ["REST API", "WebSocket live hub", "River background jobs", "Alert engine + push"] },
+    { label: "Data & Ops", items: ["PostgreSQL 16 + TimescaleDB", "Photos + encrypted backups on Cloudflare R2", "Sentry", "Prometheus"] },
+  ]}
+/>
+
+## Key decisions
+
+- **One server, on purpose.** One Go binary runs the API, the live WebSocket hub and the background jobs, next to Postgres on one VPS behind Cloudflare. That handles about 10,000 users for a small monthly bill. Redis and a message bus wait until they are needed.
+- **A live map that feels live.** Positions, speed and heading stream to the map over WebSocket, in compact Protobuf. The heading draws the direction cone under a moving member's pin.
+- **Battery as a feature.** The location engine combines fused location, activity detection and geofences, and backs off when someone is still. Bad fixes are dropped on the phone.
+- **Shared rules, native UI.** Place and alert logic lives in a UI-free Kotlin core, ready for a future iOS app.
+- **Privacy by default.** Short retention, full export and delete, quiet hours, and no ads.
+
+## CI/CD: a git tag is a release
+
+1. **Every push:** `go vet`, staticcheck and the full test suite, with real Postgres in Testcontainers.
+2. **Push a `v*` tag:** tests run again, then a Docker image goes to GHCR and deploys to the VPS.
+3. **Health check:** the server must report "ok" and the new version through Caddy. If not, it **rolls back to the previous release automatically**.
+4. **Safe migrations:** expand/contract only, so a rollback never has to undo the database.
+
+Behind it: nightly encrypted backups to Cloudflare R2, a tested restore, fail2ban and SSH-key-only access.
+
+## Built with Claude Code
+
+Claude Code was my engineering team, and I made the calls. Every milestone ran the same loop:
+
+1. **Spec:** what to build and why.
+2. **Plan:** tasks, each with a "done when" check.
+3. **Build:** tests first.
+4. **Review:** an independent code review before merge.
+
+The specs and plans live in the repo next to the code. That loop is how a solo build reached **4,300+ tests** and a store-ready release in about two weeks.
+
+## What I'd do differently
+
+Start the Play Store listing, privacy pages and data-safety form in week one, not at the end. Store review sits on the critical path, and it doesn't care how good the code is.

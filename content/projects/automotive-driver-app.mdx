@@ -1,0 +1,69 @@
+---
+title: "Driver App and Mobile BFF for a Global Automotive Client"
+summary: "The surface drivers actually hold: a Flutter companion app and its .NET mobile backend-for-frontend. It covers consent and GDPR erasure, moving every driver's data from devices to accounts, weather-based AI driving tips that never show an error, and a support handoff that carries the chat context."
+role: "Primary author of the mobile BFF and top contributor on the Flutter app; team lead on the wider platform"
+period: "2026, Brain Station 23"
+stack: ["Flutter", "Dart", ".NET", "PostgreSQL", "Redis", "Firebase Cloud Messaging", "Caddy", "Docker"]
+metrics:
+  - { label: "BFF automated tests", value: "1,500+" }
+  - { label: "Driver data re-owned", value: "device → account, resumable" }
+  - { label: "Legal pages", value: "4 languages" }
+featured: true
+order: 3
+---
+
+## Context
+
+This is the part drivers hold in their hands: a **Flutter companion app** (owner's manual, AI chat, alerts, maintenance plans, dealer locator) and the **.NET mobile BFF** behind it. The BFF shapes data for each screen, so the app never talks to internal services directly. The [chatbot](/projects/automotive-rag-chatbot) and the [content platform](/projects/automotive-content-platform) have their own case studies.
+
+<Callout title="My role">
+  I'm the primary author of the BFF and the top contributor to the Flutter app, and I lead the wider delivery team. Everything below shipped between August and October 2026.
+</Callout>
+
+## Architecture
+
+<ArchDiagram
+  layers={[
+    { label: "Flutter app", items: ["Layered domain / data / presentation", "AI chat with citation chips", "Consent gate", "Push via FCM"] },
+    { label: "Mobile BFF (.NET)", items: ["Gateway: per-screen shaping", "Identity: per-brand driver accounts", "Notifications", "Rate limits on the real client IP"] },
+    { label: "Upstream", items: ["RAG chatbot API", "Content platform settings", "Support handoff mail"] },
+    { label: "Data", items: ["PostgreSQL", "Redis cache", "Append-only consent records"] },
+  ]}
+/>
+
+## Key decisions
+
+### Privacy that holds up in an audit
+- **Consent is a record, not a checkbox.** Drivers consent at first login and can change it in Settings → Privacy. Every accept and withdraw is stored **append-only**, so the history can't be rewritten.
+- **The privacy text matches the app's language.** Privacy and terms pages exist in English, French, Spanish and Japanese.
+- **Right to erasure (GDPR Art. 17)** follows a written runbook that covers every table in every service.
+
+### A driver's data follows the driver
+Early builds saved chat history, consent and maintenance plans per phone. When accounts arrived, a signed-in driver would have seen none of it. I moved ownership to the account and wrote a one-time migration that is safe to run:
+- **All or nothing:** one transaction, on a single instance, switched on by ops.
+- **Resumable:** progress is saved, so a crash picks up where it stopped.
+- **Self-isolating:** if a batch fails, it splits in half to find the bad row.
+- **Memory too:** the chatbot's conversation memory is relinked in batches of 500.
+
+### Weather tips that never show an error
+The Tips tab shows AI driving tips for the current weather, written from the car's own manual.
+- **Coordinates never leave the phone.** The app sends only a coarse bucket, such as "heavy rain, cold".
+- **Drivers share answers.** One cached answer serves every driver of the same car, language and weather.
+- **Fails quietly.** It survives a Redis outage and respects upstream rate limits, and each paid generation's cost shows up on the admin dashboard.
+
+### Help when the AI can't answer
+When the chatbot can't solve a question, the app offers support. The case it sends **includes the conversation and the reason** it went unresolved, so the support agent doesn't start from zero.
+
+### Per-region settings, no app release
+Dealer-locator links, disclaimers and manual sources are set per region in the admin panel and pushed to the BFF. Each change is a new versioned shape, so **older app versions keep working**.
+
+## Results
+
+- **1,500+ automated tests** on the BFF.
+- **Every driver-facing feature** served through one backend.
+- **Consent you can audit** record by record, and erasure by runbook.
+- **4 languages** for legal pages.
+
+## What I'd do differently
+
+Make the account own driver data from day one, even before sign-up existed. Fixing it later cost a migration, a memory relink across two services, and an extra erasure runbook.

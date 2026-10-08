@@ -22,4 +22,13 @@ describe("projects loader", () => {
     const loaded = getProjectBySlug(first.slug);
     expect(loaded?.content).toContain("## ");
   });
+
+  it("includes the Family Nearby and driver-app case studies", () => {
+    for (const slug of ["family-nearby", "automotive-driver-app"]) {
+      const loaded = getProjectBySlug(slug);
+      expect(loaded, slug).not.toBeNull();
+      expect(loaded?.meta.featured).toBe(true);
+      expect(loaded?.content).toContain("## ");
+    }
+  });
 });
