@@ -26,6 +26,7 @@ export const metadata: Metadata = {
     description: ".NET, distributed systems, and applied AI.",
     images: ["/og/home.png"],
   },
+  verification: { google: "G6JnWyav0Pd58g9wHFW9md4mTDKCPKCqm225OD49fmw" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
