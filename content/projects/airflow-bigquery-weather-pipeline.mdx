@@ -1,7 +1,7 @@
 ---
 title: "Airflow 3 + BigQuery Data Layer for a Property-Tech AI Tool"
-summary: "The data foundation for an AI tool that finds energy waste in buildings — self-hosted Airflow 3, a 65-way mapped backfill into BigQuery, idempotent MERGE loads, partition-pruned cost, and a CI gate so no DAG ever reaches the scheduler by hand."
-role: "Sole engineer — architecture, pipelines, warehouse design, CI/CD"
+summary: "The data foundation for an AI tool that finds energy waste in buildings: self-hosted Airflow 3, a 65-way mapped backfill into BigQuery, idempotent MERGE loads, partition-pruned cost, and a CI gate so no DAG ever reaches the scheduler by hand."
+role: "Sole engineer: architecture, pipelines, warehouse design, CI/CD"
 period: "September 2026, client project (data-integration phase)"
 stack: ["Apache Airflow 3.3", "BigQuery", "Python 3.12", "Docker Compose", "GitHub Actions", "SMHI open data", "pytest"]
 metrics:
@@ -14,17 +14,17 @@ order: 5
 
 ## The brief
 
-A Swedish property-tech company is building an AI tool for real-estate owners. The idea is simple to say and hard to do: pull in every signal a building produces — sensor readings from the building management system, energy meters, tenant complaints, weather — put it in one place, and let a set of rules point at the "energy thieves": the ventilation that runs all weekend, the heating and cooling fighting each other in mild weather.
+A Swedish property-tech company is building an AI tool for real-estate owners. The idea is simple to say and hard to do: pull in every signal a building produces (sensor readings from the building management system, energy meters, tenant complaints, weather), put it in one place, and let a set of rules point at the "energy thieves": the ventilation that runs all weekend, the heating and cooling fighting each other in mild weather.
 
 None of the rules work without the data layer underneath them. That layer was my job: reliable pipelines, a warehouse that stays cheap as it grows, quality checks that go red before an analyst trusts a bad number, and a deploy path that doesn't depend on anyone remembering to click "upload".
 
 <Callout title="What this write-up covers">
-  The first slice of that layer, built and run end to end: two live sources (the Swedish weather service SMHI and energy readings from CSV drops), five Airflow DAGs, a BigQuery warehouse, and the CI gate in front of it. The client's own systems — building sensors, the CRM, the energy provider — plug into the same skeleton once their credentials arrive. Client data stays with the client; every number here is from my own copy of the stack.
+  The first slice of that layer, built and run end to end: two live sources (the Swedish weather service SMHI and energy readings from CSV drops), five Airflow DAGs, a BigQuery warehouse, and the CI gate in front of it. The client's own systems (building sensors, the CRM, the energy provider) plug into the same skeleton once their credentials arrive. Client data stays with the client; every number here is from my own copy of the stack.
 </Callout>
 
 ## Decisions before the first line of code
 
-**Self-hosted Airflow, not a managed one.** Cloud Composer starts around $300 a month sitting idle. For a pilot on two buildings that's the wrong shape of bill. Airflow 3.3 in Docker Compose with the LocalExecutor runs on a laptop today and on a small VM tomorrow, and I own every failure — which, it turned out, was the useful part.
+**Self-hosted Airflow, not a managed one.** Cloud Composer starts around $300 a month sitting idle. For a pilot on two buildings that's the wrong shape of bill. Airflow 3.3 in Docker Compose with the LocalExecutor runs on a laptop today and on a small VM tomorrow, and I own every failure, which, it turned out, was the useful part.
 
 **Logic in a plain Python package, DAGs as thin wiring.** Everything that parses, validates or loads lives in `src/eugenia/` and imports nothing from Airflow, so it has fast unit tests that run anywhere. The DAG files only say what runs after what. Airflow doesn't run natively on Windows, and this split meant the day-to-day test loop never needed Docker.
 
@@ -42,11 +42,11 @@ None of the rules work without the data layer underneath them. That layer was my
 
 ## The backfill: 45,000 rows without one giant task
 
-The first real job was a year of hourly weather for two stations and three measurements — about 45,000 rows. One task doing all of it is fragile: die at row 40,000 and you start over. One task per row is 45,000 tasks, and Airflow refuses to map more than 1,024.
+The first real job was a year of hourly weather for two stations and three measurements: about 45,000 rows. One task doing all of it is fragile: die at row 40,000 and you start over. One task per row is 45,000 tasks, and Airflow refuses to map more than 1,024.
 
 So the planner cuts the year into one file per station, per measurement, per month. That comes out to 65 files of roughly 700 rows each (13 months, because the current month is partial; Stockholm's wind series has no data this year, so its files are never written). A single `load_chunk` task is written once and Airflow makes 65 copies of it at run time. A unit test on the planner asserts the count can never quietly grow past the limit.
 
-<Screenshot src="/projects/airflow-weather/06-load-chunk-65.png" alt="Airflow task page showing load_chunk with 65 mapped instances, all successful, each about 15 seconds" caption="load_chunk [65] — one mapped task per station-measurement-month file. Total Success 65, about 15 s each on BigQuery." />
+<Screenshot src="/projects/airflow-weather/06-load-chunk-65.png" alt="Airflow task page showing load_chunk with 65 mapped instances, all successful, each about 15 seconds" caption="load_chunk [65]: one mapped task per station-measurement-month file. Total Success 65, about 15 s each on BigQuery." />
 
 Two pools keep it polite. The SMHI fetches get two slots so I'm not hammering a public API; the BigQuery loads get four, because BigQuery queues DML statements per table and more parallelism just makes them wait in a different queue. Retries are three with exponential backoff from 30 seconds up to 10 minutes.
 
@@ -54,9 +54,9 @@ Two pools keep it polite. The SMHI fetches get two slots so I'm not hammering a 
 
 ## Loading so that a retry can never duplicate a row
 
-Every chunk goes into a temporary staging table first, through a **load job** — free, and no streaming buffer. Then one `MERGE` copies it into the real table, matching on station, measurement and timestamp: update if the row exists, insert if it doesn't. Run the same chunk twice and you still get each row once. The staging table is dropped either way.
+Every chunk goes into a temporary staging table first, through a **load job**: free, and no streaming buffer. Then one `MERGE` copies it into the real table, matching on station, measurement and timestamp: update if the row exists, insert if it doesn't. Run the same chunk twice and you still get each row once. The staging table is dropped either way.
 
-I chose load jobs over streaming inserts for three reasons that turned out to matter: streaming is refused in the BigQuery sandbox, it's billable everywhere else, and streamed rows sit in a buffer where `DELETE` and `UPDATE` are refused for up to 90 minutes — exactly the operations an idempotent load needs.
+I chose load jobs over streaming inserts for three reasons that turned out to matter: streaming is refused in the BigQuery sandbox, it's billable everywhere else, and streamed rows sit in a buffer where `DELETE` and `UPDATE` are refused for up to 90 minutes, exactly the operations an idempotent load needs.
 
 The proof is boring, which is the point: I ran the full backfill, counted 45,113 rows, ran it again, and counted 45,113 rows.
 
@@ -64,7 +64,7 @@ The proof is boring, which is the point: I ran the full backfill, counted 45,113
 
 The very first backfill: I'd just triggered it and was watching the grid. Five of the six fetch tasks went green. One went yellow and started retrying.
 
-The log said `404 Not Found` from SMHI, for wind speed at the Stockholm station. The same call worked for Gothenburg. I went to SMHI's catalogue and found the answer: that station simply doesn't publish wind for recent months, only the historical archive. The 404 was correct. My client didn't know the difference between "the server is unhappy" and "this thing doesn't exist", so Airflow retried it three times with backoff — four attempts over five minutes — and then failed the whole series, including the archive half that had worked.
+The log said `404 Not Found` from SMHI, for wind speed at the Stockholm station. The same call worked for Gothenburg. I went to SMHI's catalogue and found the answer: that station simply doesn't publish wind for recent months, only the historical archive. The 404 was correct. My client didn't know the difference between "the server is unhappy" and "this thing doesn't exist", so Airflow retried it three times with backoff (four attempts over five minutes) and then failed the whole series, including the archive half that had worked.
 
 <Screenshot src="/projects/airflow-weather/04-fetch-failed-try4.png" alt="Airflow task log for fetch_source map index 1 showing Failed after try number 4 with an HTTPError 404 from SMHI" caption="Before: four tries, then the series fails. The 404 was the truth, and the client retried it anyway." />
 
@@ -74,11 +74,11 @@ The fix that stuck is small. A 404 on a period now returns empty, logs one warni
 
 ## Keeping the bill flat as the table grows
 
-BigQuery charges by bytes scanned. A `MERGE` against an unpartitioned table reads the whole table every time, so the cost of loading one month grows with every month already loaded. On 45,000 rows that was 1.9 MB per chunk — nothing today, a real line item at ten years of data.
+BigQuery charges by bytes scanned. A `MERGE` against an unpartitioned table reads the whole table every time, so the cost of loading one month grows with every month already loaded. On 45,000 rows that was 1.9 MB per chunk: nothing today, a real line item at ten years of data.
 
 The tables are now partitioned by day and clustered by station and measurement, and every `MERGE` carries a predicate that bounds it to the chunk's own dates. BigQuery reads only the partitions the batch touches. Measured on the full table: **1,924,776 bytes down to 145,302 per chunk**, about 13× less, and it stays flat instead of growing. The whole 12-month backfill scans 9 MB against a 1 TB monthly free tier.
 
-There was a second, quieter lesson in that change. Datasets created while a project is still in the BigQuery sandbox carry a 60-day default expiry that survives enabling billing. When I recreated the table as partitioned, it inherited that, and BigQuery silently dropped every partition older than 60 days — 45,113 rows merged, 7,255 left, every task green. A row count after the load is what caught it. `ensure_tables` now clears the expiry on every dataset and table, every run.
+There was a second, quieter lesson in that change. Datasets created while a project is still in the BigQuery sandbox carry a 60-day default expiry that survives enabling billing. When I recreated the table as partitioned, it inherited that, and BigQuery silently dropped every partition older than 60 days: 45,113 rows merged, 7,255 left, every task green. A row count after the load is what caught it. `ensure_tables` now clears the expiry on every dataset and table, every run.
 
 ## The rest of the pipeline
 
@@ -86,10 +86,10 @@ There was a second, quieter lesson in that change. Datasets created while a proj
 
 - **`smhi_hourly`** pulls the latest hour for every series and merges it through the same loader. When it finishes, it announces an Asset.
 - **`curated_build`** has no schedule; it starts when that Asset changes and rebuilds the hourly weather table per property, with the degree-day contribution the energy rules consume. I build the table; the analysts own the rules on top of it.
-- **`energy_csv_import`** watches a drop folder every 15 minutes, validates each file as a whole — columns, meter types, units, timestamps, MWh normalised to kWh — loads the good ones, and moves bad ones to `rejected/` with a machine-readable error report. A template violation fails once, without retrying; a retry can't fix a bad file.
+- **`energy_csv_import`** watches a drop folder every 15 minutes, validates each file as a whole (columns, meter types, units, timestamps, MWh normalised to kWh), loads the good ones, and moves bad ones to `rejected/` with a machine-readable error report. A template violation fails once, without retrying; a retry can't fix a bad file.
 - **`data_quality_daily`** scores every source and property for yesterday: missing hours, out-of-range values, staleness against the series' newest row. Any score under 70 turns the run red so someone looks.
 
-Every run, of every DAG, writes one line to `ops.connector_status` — rows loaded, errors, outcome — which is what the client's "connector status" dashboard will read.
+Every run, of every DAG, writes one line to `ops.connector_status` (rows loaded, errors, outcome), which is what the client's "connector status" dashboard will read.
 
 <Screenshot src="/projects/airflow-weather/08-assets.png" alt="Airflow assets page showing the two Assets emitted by the pipelines" caption="Assets: smhi_hourly produces raw.smhi_observations; curated_build consumes it." />
 
@@ -97,7 +97,7 @@ Every run, of every DAG, writes one line to `ops.connector_status` — rows load
 
 - 12-month backfill: 65 mapped loads, 45,113 rows, 5 min 14 s, zero retries after the 404 fix; re-run leaves the count unchanged.
 - Bytes scanned per chunk MERGE: 1.9 MB → 145 KB, flat with table size.
-- 22 unit tests, 4 DAG-integrity tests, 2 integration tests — all green on every PR and on `develop`.
+- 22 unit tests, 4 DAG-integrity tests, 2 integration tests, all green on every PR and on `develop`.
 - Six real failures met and fixed in the first week, each with a test or a guard so it can't come back: the 404 retry, parallel MERGE thrash, a duplicate DAG id from one DAG file importing another, sandbox limits on streaming and DML, a staleness false positive, and the 60-day expiry.
 
 ## What I'd do differently

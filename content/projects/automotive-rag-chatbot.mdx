@@ -1,6 +1,6 @@
 ---
 title: "RAG Chatbot with MCP External Data Sources for a Global Automotive Client"
-summary: "A production-grade retrieval-augmented generation backend answering vehicle owner-manual questions — hybrid retrieval, four-layer caching, releases gated on measured quality SLOs, and an MCP connection to external data sources, built so web text can never pass as the approved manual."
+summary: "A production-grade retrieval-augmented generation backend answering vehicle owner-manual questions: hybrid retrieval, four-layer caching, releases gated on measured quality SLOs, and an MCP connection to external data sources, built so web text can never pass as the approved manual."
 role: "Sole author of the Python/FastAPI backend; also built the .NET content platform feeding it"
 period: "2025 – 2026, Brain Station 23"
 stack: ["Python", "FastAPI", "Qdrant", "MCP", "PostgreSQL", "Redis", "OpenAI", "Anthropic", "Gemini", "Cohere", "BM25", "SSE"]
@@ -17,7 +17,7 @@ order: 1
 
 ## Context
 
-A global automotive client needed drivers to get accurate answers from vehicle owner manuals — hundreds of pages per model, safety-critical content, multiple languages. Wrong answers about towing capacity or warning lights are not acceptable, so answer quality had to be measured, not assumed.
+A global automotive client needed drivers to get accurate answers from vehicle owner manuals: hundreds of pages per model, safety-critical content, multiple languages. Wrong answers about towing capacity or warning lights are not acceptable, so answer quality had to be measured, not assumed.
 
 <Callout title="My role">
   I sole-authored the Python/FastAPI RAG backend and designed its Clean Architecture with CI-enforced import boundaries. I also built the .NET content platform that feeds manual content into ingestion, and wired the two together with a live contract test.
@@ -39,9 +39,9 @@ Queries fan out to dense and sparse search in parallel; results merge with recip
 
 ## Key decisions
 
-**Hybrid retrieval over pure vectors.** Owner manuals are full of exact tokens — part numbers, warning-light names, acronyms — that embeddings blur. Adding BM25 sparse retrieval and an exact-entity keyword index raised recall@100 (the right section appears in the top 100 search results) from 96.9% to 100% on the evaluation set, and disambiguation prompts now win 100% of 27 acronym-collision cases.
+**Hybrid retrieval over pure vectors.** Owner manuals are full of exact tokens (part numbers, warning-light names, acronyms) that embeddings blur. Adding BM25 sparse retrieval and an exact-entity keyword index raised recall@100 (the right section appears in the top 100 search results) from 96.9% to 100% on the evaluation set, and disambiguation prompts now win 100% of 27 acronym-collision cases.
 
-**Four cache layers with singleflight.** Embedding reuse, retrieval results, full answers, and conversation context cache independently in Redis with distinct TTLs. Singleflight locks collapse concurrent identical requests into one upstream call — the difference between a cost spike and a flat line when many drivers ask the same question after a recall notice.
+**Four cache layers with singleflight.** Embedding reuse, retrieval results, full answers, and conversation context cache independently in Redis with distinct TTLs. Singleflight locks collapse concurrent identical requests into one upstream call. That is the difference between a cost spike and a flat line when many drivers ask the same question after a recall notice.
 
 **Releases gated on SLOs.** A behavioral evaluation harness runs before every release: at least 70% standard-answer rate, at least 80% citation coverage, at most 2% error rate. The suite has since grown to 2,300+ tests plus architecture-boundary checks, so quality regressions block the release instead of reaching drivers.
 
@@ -97,8 +97,8 @@ Drivers get short tips for the weather they are in, such as tyre pressure in the
 
 Verified by the automated evaluation harness: the right manual section found for 100% of test questions, 100% disambiguation win-rate, structured answers with citation validation, SSE time-to-first-token designed against explicit latency targets. Multi-tenant-ready isolation is in place for rollout beyond the pilot.
 
-The chatbot is one surface of a wider platform I lead — the .NET content system feeding its ingestion, the administration panel, and the mobile BFF are covered in the companion [platform case study](/projects/automotive-content-platform).
+The chatbot is one surface of a wider platform I lead. The .NET content system feeding its ingestion, the administration panel, and the mobile BFF are covered in the companion [platform case study](/projects/automotive-content-platform).
 
 ## What I'd do differently
 
-Start the evaluation harness on day one rather than mid-project — every retrieval decision became faster to make once changes could be scored against a fixed question set within minutes.
+Start the evaluation harness on day one rather than mid-project. Every retrieval decision became faster to make once changes could be scored against a fixed question set within minutes.

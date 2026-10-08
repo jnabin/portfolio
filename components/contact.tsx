@@ -10,7 +10,7 @@ export function Contact() {
   return (
     <div>
       <p className="max-w-xl text-fg-muted">
-        Open to senior backend and AI engineering roles — remote, international. The fastest way to reach me is email.
+        Open to senior backend and AI engineering roles: remote, international. The fastest way to reach me is email.
       </p>
       <ul className="mt-5 flex flex-wrap gap-3">
         {links.map((l) => (

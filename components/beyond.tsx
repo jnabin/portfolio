@@ -9,7 +9,7 @@ export function Beyond() {
         ))}
       </ul>
       <p className="text-sm text-fg-muted">
-        <span className="font-semibold text-fg">{site.education.degree}</span> — {site.education.school} ·{" "}
+        <span className="font-semibold text-fg">{site.education.degree}</span>, {site.education.school} ·{" "}
         {site.education.detail}
       </p>
       <p className="text-sm text-fg-muted">{site.languages}</p>

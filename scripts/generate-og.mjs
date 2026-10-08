@@ -8,7 +8,7 @@ const SITE_URL = siteTs.match(/SITE_URL\s*=\s*"([^"]+)"/)[1];
 const SITE_HOST = new URL(SITE_URL).host;
 
 const pages = [
-  { file: "home", title: "Jahangir Nabin", subtitle: "Senior Software Engineer — .NET, Distributed Systems & Applied AI" },
+  { file: "home", title: "Jahangir Nabin", subtitle: "Senior Software Engineer | .NET, Distributed Systems & Applied AI" },
   { file: "projects", title: "Projects & Case Studies", subtitle: "Production RAG + MCP · Android + Go product · Multi-tenant SaaS · Freight ERP" },
   { file: "automotive-rag-chatbot", title: "RAG Chatbot Case Study", subtitle: "Owner-manual AI · MCP external data · quality-gated releases" },
   { file: "automotive-content-platform", title: "Automotive Platform Case Study", subtitle: "Modular monolith · transactional outbox · Kafka · 4,300+ tests" },

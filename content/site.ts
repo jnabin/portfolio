@@ -17,9 +17,9 @@ type ExperienceItem = {
 
 export const site = {
   name: "Jahangir Alam Nabin",
-  headline: "Senior Software Engineer — .NET, Distributed Systems & Applied AI",
+  headline: "Senior Software Engineer | .NET, Distributed Systems & Applied AI",
   intro:
-    "I build backend platforms and AI systems that ship — from multi-tenant SaaS to a production-grade RAG chatbot for a global automotive client — and I'm just as at home on IBM z/OS mainframes: JCL, CICS, REXX, and z/OS-to-cloud integration. Currently leading a 6-developer team at Brain Station 23, and shipping my own Android app, Family Nearby, on a Go backend.",
+    "I build backend platforms and AI systems that ship, from multi-tenant SaaS to a production-grade RAG chatbot for a global automotive client. I'm just as at home on IBM z/OS mainframes: JCL, CICS, REXX, and z/OS-to-cloud integration. Currently leading a 6-developer team at Brain Station 23, and shipping my own Android app, Family Nearby, on a Go backend.",
   heroStat: { value: "100%", label: "Upwork Job Success · 2,439 hrs · Top Rated" },
   introVideo: {
     youtubeId: "NOW9dUA7OOM",
@@ -34,8 +34,8 @@ export const site = {
     upwork: "https://www.upwork.com/freelancers/~014a55b53d36d618d6",
   },
   evidence: [
-    { label: "Team led day-to-day", value: "6 developers — presales, estimation, releases" },
-    { label: "Platforms architected", value: "2 — compliance SaaS & automotive AI" },
+    { label: "Team led day-to-day", value: "6 developers: presales, estimation, releases" },
+    { label: "Platforms architected", value: "2: compliance SaaS & automotive AI" },
     { label: "Client contracts delivered", value: "20 at 100% Job Success · Top Rated" },
     { label: "Chatbot finds the right manual section", value: "96.9% → 100% of test questions" },
     { label: "Chatbot procedure answers", value: "2× faster · 8.5 s → 3.9 s" },
@@ -50,12 +50,12 @@ export const site = {
   howIRun: [
     {
       title: "Team leadership",
-      body: "I lead a 6-developer team at Brain Station 23 — planning, reviews and releases. Earlier I guided 2 intern developers at Democratik.",
+      body: "I lead a 6-developer team at Brain Station 23: planning, reviews and releases. Earlier I guided 2 intern developers at Democratik.",
       evidence: "11-service platform delivered under my leadership",
     },
     {
       title: "Presales",
-      body: "Presales for enterprise .NET and AI engagements — solution outlines, effort estimates and proposals that turn briefs into funded projects.",
+      body: "Presales for enterprise .NET and AI engagements: solution outlines, effort estimates and proposals that turn briefs into funded projects.",
       evidence: "Presales · requirement analysis · estimation · releases",
     },
     {
@@ -65,7 +65,7 @@ export const site = {
     },
     {
       title: "Architecture planning across projects",
-      body: "Architect of a multi-tenant compliance SaaS (CQRS, 54 modules) and an automotive AI platform — plus an 11-service modular monolith with Kafka outbox.",
+      body: "Architect of a multi-tenant compliance SaaS (CQRS, 54 modules) and an automotive AI platform, plus an 11-service modular monolith with Kafka outbox.",
       evidence: "413 REST endpoints · MCP tool loop · 2× faster answers",
     },
     {
@@ -82,7 +82,7 @@ export const site = {
   mainframe: [
     {
       title: "IBM Cloud Wazi port",
-      body: "Ported and extended an open-source COBOL/CICS/DB2 airline system to a fresh z/OS 3.1 instance on IBM Cloud Wazi — VPN networking to green screen, 30+ errors diagnosed. Demonstrated at a conference in Japan.",
+      body: "Ported and extended an open-source COBOL/CICS/DB2 airline system to a fresh z/OS 3.1 instance on IBM Cloud Wazi, from VPN networking to green screen, 30+ errors diagnosed. Demonstrated at a conference in Japan.",
       evidence: "6 CICS + 3 batch programs · 10 DB2 tables",
     },
     {
@@ -92,7 +92,7 @@ export const site = {
     },
     {
       title: "The toolbox",
-      body: "JCL, CICS, BMS, COBOL, DB2, REXX, BPXBATCH/USS, EBCDIC conversion, Zowe CLI, TN3270 — modern engineering discipline applied to big iron.",
+      body: "JCL, CICS, BMS, COBOL, DB2, REXX, BPXBATCH/USS, EBCDIC conversion, Zowe CLI, TN3270: modern engineering discipline applied to big iron.",
       evidence: "Two written-up case studies",
     },
   ],
@@ -147,7 +147,7 @@ export const site = {
       ],
     },
     {
-      title: "Software Engineer — .NET & Angular",
+      title: "Software Engineer (.NET & Angular)",
       company: "SkyTech Solutions (Codezzi), Dhaka",
       dates: "Jan 2025 – Jul 2025",
       lines: [
@@ -156,7 +156,7 @@ export const site = {
       ],
     },
     {
-      title: "Software Engineer — .NET & Angular",
+      title: "Software Engineer (.NET & Angular)",
       company: "Freightoscope, FL, USA (Remote)",
       dates: "Jan 2022 – Present",
       note: "Full-time to Feb 2025; part-time consulting since.",
@@ -166,7 +166,7 @@ export const site = {
       ],
     },
     {
-      title: "Software Engineer — .NET (Part-time)",
+      title: "Software Engineer (.NET, part-time)",
       company: "Quadiro Technologies LLP (Remote)",
       dates: "Nov 2021 – Jun 2022",
       lines: [
@@ -175,7 +175,7 @@ export const site = {
       ],
     },
     {
-      title: "Full-Stack Developer — Node.js & Angular",
+      title: "Full-Stack Developer (Node.js & Angular)",
       company: "Democratik, Laval, Canada (Remote)",
       dates: "Dec 2020 – Jan 2022",
       lines: [
@@ -184,7 +184,7 @@ export const site = {
       ],
     },
     {
-      title: "Software Developer Intern — .NET",
+      title: "Software Developer Intern (.NET)",
       company: "Code Source, Dhaka",
       dates: "Sep 2020 – Dec 2020",
       lines: [
@@ -204,7 +204,7 @@ export const site = {
   ],
   beyond: [
     "Independent freelance record: Top Rated, 100% Job Success across 20 contracts and 2,439 logged hours.",
-    "Family Nearby — my own family location-sharing app: Android + Go, built solo with Claude Code, now in Google Play review.",
+    "Family Nearby: my own family location-sharing app: Android + Go, built solo with Claude Code, now in Google Play review.",
     "Ship complete products solo: a licensed cross-platform desktop app with fail-closed Ed25519 entitlements.",
   ],
   education: {

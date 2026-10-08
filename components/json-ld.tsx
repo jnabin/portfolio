@@ -14,7 +14,7 @@ export function JsonLd() {
       },
       {
         "@type": "VideoObject",
-        name: `${site.name} — ${site.introVideo.title}`,
+        name: `${site.name}: ${site.introVideo.title}`,
         description: "A 60-second video introduction by Jahangir Alam Nabin, Senior Software Engineer.",
         thumbnailUrl: `${SITE_URL}${site.introVideo.posterSrc}`,
         uploadDate: "2026-08-05",

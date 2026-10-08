@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 const capabilities = [
   {
     title: "IBM z/OS & JCL",
-    body: "Dataset allocation, compile-bind-deploy JCL, APF-authorization and 80-column pitfalls, SDSF-driven debugging — 20+ jobs written for one deployment alone.",
+    body: "Dataset allocation, compile-bind-deploy JCL, APF-authorization and 80-column pitfalls, SDSF-driven debugging. 20+ jobs written for one deployment alone.",
     evidence: "12 PDS datasets · 20+ JCL jobs",
   },
   {
@@ -36,12 +36,12 @@ const capabilities = [
   },
   {
     title: "IBM Cloud Wazi",
-    body: "Provisioned and ran z/OS 3.1 Dev/Test on IBM Cloud VPC — OpenVPN access, security groups, z/OSMF on a non-standard port.",
+    body: "Provisioned and ran z/OS 3.1 Dev/Test on IBM Cloud VPC: OpenVPN access, security groups, z/OSMF on a non-standard port.",
     evidence: "Clean instance → working CICS app",
   },
   {
     title: "Zowe tooling",
-    body: "Zowe CLI over z/OSMF REST for uploads, job submission and spool retrieval — codepage-safe transfers that ended a whole class of EBCDIC bugs.",
+    body: "Zowe CLI over z/OSMF REST for uploads, job submission and spool retrieval, with codepage-safe transfers that ended a whole class of EBCDIC bugs.",
     evidence: "Scripted, repeatable deployments",
   },
 ];
@@ -65,7 +65,7 @@ export default function MainframePage() {
     <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6">
       <h1 className="text-3xl font-extrabold text-fg">Mainframe &amp; z/OS</h1>
       <p className="mt-2 max-w-2xl text-fg-muted">
-        Most of my work is modern .NET and AI platforms — but I also ship on big iron. I ported a
+        Most of my work is modern .NET and AI platforms, but I also ship on big iron. I ported a
         COBOL/CICS/DB2 system to IBM Cloud Wazi from a bare instance, and I consult on z/OS-to-cloud
         integration: JCL, BPXBATCH, REXX, and SFTP with proper EBCDIC handling.
       </p>

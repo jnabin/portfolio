@@ -1,23 +1,23 @@
 ---
 title: "Root-Causing a Silent z/OS-to-Cloud SFTP Failure"
 summary: "Consulting for a US mainframe software vendor whose JCL job reported success while its BPXBATCH SFTP upload silently died. Decoded the masked exit codes, found four defects in a single JCL review, and delivered production JCL, a REXX command generator, and runbooks for two SFTP stacks."
-role: "Consulting mainframe engineer — diagnosis, JCL/REXX development, operator and end-user documentation"
+role: "Consulting mainframe engineer: diagnosis, JCL/REXX development, operator and end-user documentation"
 period: "Jul – Aug 2026, consulting engagement"
 stack: ["IBM z/OS", "JCL", "BPXBATCH", "REXX", "SFTP", "USS", "Co:Z", "IBM OpenSSH", "iconv"]
 metrics:
   - { label: "Defects found", value: "4 from one JCL review" }
   - { label: "Exit code decoded", value: "CC 3840 = 255 × 256" }
-  - { label: "Solution variants", value: "2 — Co:Z and IBM OpenSSH" }
+  - { label: "Solution variants", value: "2: Co:Z and IBM OpenSSH" }
 featured: false
 order: 11
 ---
 
 ## Context
 
-A US mainframe software vendor needed output from their z/OS batch product uploaded to their new cloud service. Their three-step JCL job compiled, merged its output into one file — and then reported success while the file never arrived. The failure hid in plain sight: BPXBATCH returns 0 for "I started the shell", the shell returns 0 for "I started sftp", and the real sftp exit 255 surfaced only as a separate `*OMVSEX` pseudo-step that never became the job's condition code. Programmers were told everything was fine when nothing had been delivered.
+A US mainframe software vendor needed output from their z/OS batch product uploaded to their new cloud service. Their three-step JCL job compiled, merged its output into one file, and then reported success while the file never arrived. The failure hid in plain sight: BPXBATCH returns 0 for "I started the shell", the shell returns 0 for "I started sftp", and the real sftp exit 255 surfaced only as a separate `*OMVSEX` pseudo-step that never became the job's condition code. Programmers were told everything was fine when nothing had been delivered.
 
 <Callout title="My role">
-  Engaged to make the transfer step work and make its failures visible. I root-caused the masked return codes from job output alone — no system access at first — rewrote the JCL through five delivered revisions, wrote the REXX command generator, and produced an operator runbook plus end-user documentation for the 5–15 programmers who would run the job.
+  Engaged to make the transfer step work and make its failures visible. I root-caused the masked return codes from job output alone (no system access at first), rewrote the JCL through five delivered revisions, wrote the REXX command generator, and produced an operator runbook plus end-user documentation for the 5–15 programmers who would run the job.
 </Callout>
 
 ## Architecture
@@ -35,20 +35,20 @@ A REXX exec parses control cards (server, port, target directory) and generates 
 
 ## Key decisions
 
-**Decode the numbers before touching the code.** The original run showed `0 / 0 / 255`; after a partial fix, a baffling `CC 3840`. That isn't a z/OS error code — it's the same sftp exit 255 multiplied by 256 and truncated to the 12-bit condition-code field (255 × 256 = 65280 → 3840). Establishing that turned a mystery into a known fatal-error class and told us exactly where to look.
+**Decode the numbers before touching the code.** The original run showed `0 / 0 / 255`; after a partial fix, a baffling `CC 3840`. That isn't a z/OS error code. It's the same sftp exit 255 multiplied by 256 and truncated to the 12-bit condition-code field (255 × 256 = 65280 → 3840). Establishing that turned a mystery into a known fatal-error class and told us exactly where to look.
 
-**One JCL review, four defects.** Uppercase `-B` (buffer size) where lowercase `-b` (batch file) was meant — sftp died parsing its own command line before touching the network. An `ASCII` command in the batch file — an FTP command sftp doesn't have, meaning the EBCDIC conversion everyone assumed was happening never happened at all. A `put` target carrying a full user@host address where only a filename belongs. And `_BPX_BATCH-SPAWN` with a hyphen instead of an underscore — silently ignored, which is precisely why the 255 never propagated up.
+**One JCL review, four defects.** Uppercase `-B` (buffer size) where lowercase `-b` (batch file) was meant, so sftp died parsing its own command line before touching the network. An `ASCII` command in the batch file, an FTP command sftp doesn't have, meaning the EBCDIC conversion everyone assumed was happening never happened at all. A `put` target carrying a full user@host address where only a filename belongs. And `_BPX_BATCH-SPAWN` with a hyphen instead of an underscore, silently ignored, which is precisely why the 255 never propagated up.
 
-**Fix the reporting, not just the bug.** `_BPX_BATCH_SPAWN=YES` makes the UNIX work's exit code become the step's condition code, and routing stderr to SYSOUT puts the real error text in SDSF next to the job — so a failed transfer now fails loudly, fast, with a message a programmer can read, instead of hanging or lying.
+**Fix the reporting, not just the bug.** `_BPX_BATCH_SPAWN=YES` makes the UNIX work's exit code become the step's condition code, and routing stderr to SYSOUT puts the real error text in SDSF next to the job, so a failed transfer now fails loudly, fast, with a message a programmer can read, instead of hanging or lying.
 
-**Ship two solutions.** The client's SFTP stack was unconfirmed, so I delivered parallel decks for both candidates: Co:Z SFTP (DD-name and dataset aware, per-command text conversion) and IBM OpenSSH (staged through z/OS UNIX files with explicit `iconv` IBM-1047 → ISO8859-1 conversion) — each with SSH key authentication setup documented.
+**Ship two solutions.** The client's SFTP stack was unconfirmed, so I delivered parallel decks for both candidates: Co:Z SFTP (DD-name and dataset aware, per-command text conversion) and IBM OpenSSH (staged through z/OS UNIX files with explicit `iconv` IBM-1047 → ISO8859-1 conversion), each with SSH key authentication setup documented.
 
-**Design for 5–15 programmers, not one.** System-symbol substitution lets every programmer run the identical job under their own identity — no per-user JCL edits — with the REXX generator building per-run command files from the same control cards.
+**Design for 5–15 programmers, not one.** System-symbol substitution lets every programmer run the identical job under their own identity (no per-user JCL edits), with the REXX generator building per-run command files from the same control cards.
 
 ## Results
 
-Root cause confirmed against the client's own job output across iterations; five JCL revisions delivered with an operator runbook and end-user documentation covering one-time SSH key setup and a troubleshooting table mapping symptoms to causes. Silent success replaced by loud, explained failure — the exact property the client asked for.
+Root cause confirmed against the client's own job output across iterations; five JCL revisions delivered with an operator runbook and end-user documentation covering one-time SSH key setup and a troubleshooting table mapping symptoms to causes. Silent success replaced by loud, explained failure: the exact property the client asked for.
 
 ## What I'd do differently
 
-Push earlier for direct system access or a captured stderr file — remote diagnosis from screenshots works, but each round-trip costs days that one `cat /tmp/sftp.stderr` would have saved.
+Push earlier for direct system access or a captured stderr file. Remote diagnosis from screenshots works, but each round-trip costs days that one `cat /tmp/sftp.stderr` would have saved.

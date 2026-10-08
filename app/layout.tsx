@@ -13,8 +13,8 @@ const jbmono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jbmono" })
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Jahangir Nabin — Senior Software Engineer",
-    template: "%s — Jahangir Nabin",
+    default: "Jahangir Nabin | Senior Software Engineer",
+    template: "%s | Jahangir Nabin",
   },
   description:
     ".NET, distributed systems, and applied AI. Senior software engineer leading teams and shipping production RAG systems.",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: SITE_URL,
-    title: "Jahangir Nabin — Senior Software Engineer",
+    title: "Jahangir Nabin | Senior Software Engineer",
     description: ".NET, distributed systems, and applied AI.",
     images: ["/og/home.png"],
   },

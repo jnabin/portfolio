@@ -31,7 +31,7 @@ export default function Home() {
       <Section id="evidence" title="Evidence">
         <EvidencePanel />
       </Section>
-      <Section id="how-i-run" title="How I run projects — beyond the code">
+      <Section id="how-i-run" title="How I run projects, beyond the code">
         <HowIRun />
       </Section>
       <Section id="mainframe" title="Mainframe & z/OS">
