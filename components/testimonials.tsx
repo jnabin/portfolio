@@ -14,6 +14,7 @@ function Stars() {
 }
 
 export function Testimonials() {
+  const more = site.upworkFiveStarReviews - site.testimonials.length;
   return (
     <div className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
@@ -31,7 +32,7 @@ export function Testimonials() {
       <p className="text-sm text-fg-muted">
         Quoted word for word from client reviews.{" "}
         <a href={site.contact.upwork} className="font-semibold text-brand hover:underline" target="_blank" rel="noopener noreferrer">
-          Verify on Upwork →
+          {more > 0 ? `+${more} more 5-star reviews on Upwork →` : "Verify on Upwork →"}
         </a>
       </p>
     </div>

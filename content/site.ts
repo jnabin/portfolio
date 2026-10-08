@@ -96,6 +96,9 @@ export const site = {
       evidence: "Two written-up case studies",
     },
   ],
+  // All 5-star reviews on the Upwork profile (with or without text). The page shows
+  // "+N more" where N = this total minus the cards below.
+  upworkFiveStarReviews: 11,
   testimonials: [
     {
       quote: "It was really a pleasure to work with Md. Jahangir, he was professional, sharp and very talented. I would recommand him.",

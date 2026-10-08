@@ -27,6 +27,7 @@ describe("site content integrity", () => {
 
   it("shows at least 3 verbatim 5-star client testimonials", () => {
     expect(site.testimonials.length).toBeGreaterThanOrEqual(3);
+    expect(site.upworkFiveStarReviews).toBeGreaterThanOrEqual(site.testimonials.length);
     for (const t of site.testimonials) {
       expect(t.quote.length).toBeGreaterThan(10);
       expect(t.context.length).toBeGreaterThan(3);
